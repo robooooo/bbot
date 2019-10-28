@@ -25,6 +25,7 @@ namespace BBotCore
                 UseInternalLogHandler = true,
                 LogLevel = LogLevel.Debug,
                 MessageCacheSize = 128,
+                // Caused issues with crashing & stalling 
                 AutoReconnect = false,
             });
             Commands = Discord.UseCommandsNext(new CommandsNextConfiguration
@@ -35,21 +36,22 @@ namespace BBotCore
                 EnableDms = false,
                 EnableMentionPrefix = true,
             });
-            Commands.RegisterCommands<Commands>();
             Interactivity = Discord.UseInteractivity(new InteractivityConfiguration()
             {
                 Timeout = TimeSpan.FromMinutes(1),
             });
 
-            Commands.CommandErrored += Commands_CommandErrored;
             Discord.Ready += async (e) =>
             {
-                await Discord.UpdateStatusAsync(new DiscordGame("$changelog 4.0.2"));
+                await Discord.UpdateStatusAsync(new DiscordGame("$changelog 4.0.5"));
             };
 
+            Commands.CommandErrored += Commands_CommandErrored;
+            Commands.RegisterCommands<Commands>();
             MainAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
         }
-
+        // Callback from errored command
+        // Will be used to display some sort oferror message
         private static async Task Commands_CommandErrored(CommandErrorEventArgs e)
         {
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder

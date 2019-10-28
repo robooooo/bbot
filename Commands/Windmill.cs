@@ -9,6 +9,7 @@ namespace BBotCore
     {
         [Command("windmill")]
         [Description("Windmill of friendship! <3")]
+        // REFACTOR: Should just remove this lol
         public async Task Windmill(CommandContext ctx,
             [Description("First icon in the windmill.")] DiscordEmoji centre,
             [Description("Second icon in the windmill.")] DiscordEmoji background

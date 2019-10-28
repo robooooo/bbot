@@ -16,6 +16,7 @@ namespace BBotCore
      [Description("Version to view the changelog for")] string version = "No version specified."
  )
         {
+            // REFACTOR: Move outside function?
             Dictionary<string, string> Information = new Dictionary<string, string>()
             {
                 {
@@ -73,6 +74,8 @@ namespace BBotCore
                 Color = new DiscordColor(0xFFC800),
                 Title = "🕒 $changelog",
             };
+            // Usage is $changelog ver. or simply $changelog
+            // So we search and find ver. if it exists 
             if (Information.ContainsKey(version))
             {
                 Builder.Description = "Showing specified version.";

@@ -41,6 +41,7 @@ namespace BBotCore
                 if (Search.Items[i] != null)
                     Builder.AddField($"{Titles[i]} Result:", Search.Items[i].Link, true);
 
+            // REFACTOR: Add react?
             var EmbedMessage = await ctx.RespondAsync(embed: Builder.Build());
             var UrlMesage = await ctx.RespondAsync($"{Search.Items[0].Link}");
 

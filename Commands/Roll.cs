@@ -15,6 +15,7 @@ namespace BBotCore
             [Description("An optional range of values for the command.")] params int[] arguments
         )
         {
+            // Select the range using reasonable defaults
             int First = 1, Second = 6;
             if (arguments.Length >= 2)
             {

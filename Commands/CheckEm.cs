@@ -15,6 +15,7 @@ namespace BBotCore
             [Description("Quantifier, for example '3' or 'trips'.")] string roll
         )
         {
+            // REFACTOR: Maybe clean this up?
             int Value;
             string[] Quantifiers = new string[] { "dubs", "trips", "quads", "pents", "hexts", "septs", "octs" };
             if (int.TryParse(roll, out int n) && n >= 2)
@@ -31,17 +32,6 @@ namespace BBotCore
 
             int Result = RNG.Next(0, (int)Math.Pow(10, Value));
             string Out = Result.ToString().PadLeft(Value, '0');
-
-            // Bot owner :-)
-            ulong Id = 460267511904993280;
-            if (ctx.User.Id == Id && Value == 2)
-            {
-                if (RNG.Next(0, 2) == 0)
-                {
-                    int NewNum = RNG.Next(0, 10);
-                    Out = $"{NewNum}{NewNum}";
-                }
-            }
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {

@@ -17,6 +17,11 @@ namespace BBotCore
             [Description("Channel to backup the pins to.")] DiscordChannel channel
         )
         {
+            // REFACTOR: Add support for users using citador or similar
+
+            // REFACTOR: Manual permission checks w/ owner override 
+            // Important so that unpriveliged users cannnot backup to channel they don't have post permissions for
+            // Also provides error handling for the case where the bot itself is unpriveliged
             if (!(ctx.Member.IsOwner || channel.PermissionsFor(ctx.Member).HasPermission(Permissions.Administrator) || ctx.Member.Id == 110161277707399168))
             {
                 if (!channel.PermissionsFor(ctx.Member).HasPermission(Permissions.SendMessages))
@@ -26,6 +31,7 @@ namespace BBotCore
             }
 
             var Pins = await ctx.Channel.GetPinnedMessagesAsync();
+
             DiscordEmbedBuilder FirstBuilder = new DiscordEmbedBuilder
             {
                 Color = new DiscordColor(0xFFC800),
@@ -34,38 +40,44 @@ namespace BBotCore
             };
             await ctx.RespondAsync(embed: FirstBuilder);
 
-            var UnpinQueue = new Queue<DiscordMessage>();
-            foreach (var p in Pins.Reverse())
+            //var UnpinQueue = new Queue<DiscordMessage>();
+
+            // We want to reverse here so that the oldest pins are posted first => newest pin is final
+            // POSSIBLE REFACTOR: Move loop body to function
+            foreach (var pin in Pins.Reverse())
             {
+                // REFACTOR: Determine the image to use 
                 string EmbedURL = null;
-                if (p.Attachments.Count > 0)
-                    EmbedURL = p.Attachments[0].Url;
-                else if (p.Embeds.Count > 0 && p.Embeds[0].Thumbnail != null)
-                    EmbedURL = p.Embeds[0].Thumbnail.Url.ToString();
+                if (pin.Attachments.Count > 0)
+                    EmbedURL = pin.Attachments[0].Url;
+                else if (pin.Embeds.Count > 0 && pin.Embeds[0].Thumbnail != null)
+                    EmbedURL = pin.Embeds[0].Thumbnail.Url.ToString();
 
-                // Create a link for the message
-                string Link = $"https://discordapp.com/channels/{p.Channel.GuildId}/{p.ChannelId}/{p.Id}";
+                // Create a link pointing to the original message which can be visited
+                string Link = $"https://discordapp.com/channels/{pin.Channel.GuildId}/{pin.ChannelId}/{pin.Id}";
 
+                // Move all this information into a postable embed
                 DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
                 {
-                    Description = p.Content,
+                    Description = pin.Content,
                     Color = new DiscordColor(0xFFC800),
                     Author = new DiscordEmbedBuilder.EmbedAuthor()
                     {
-                        Name = p.Author.Username,
-                        IconUrl = p.Author.AvatarUrl,
+                        Name = pin.Author.Username,
+                        IconUrl = pin.Author.AvatarUrl,
                         Url = Link,
                     },
                     Footer = new DiscordEmbedBuilder.EmbedFooter()
                     {
-                        Text = $"#{p.Channel.Name} | {p.Timestamp.ToString("yyyy-MM-dd")}",
+                        Text = $"#{pin.Channel.Name} | {pin.Timestamp.ToString("yyyy-MM-dd")}",
                     },
                     ImageUrl = "",
                 };
                 if (EmbedURL != null)
                     Builder.ImageUrl = EmbedURL;
+
                 await channel.SendMessageAsync(content: Link, embed: Builder.Build());
-                UnpinQueue.Enqueue(p);
+                await pin.UnpinAsync();
             }
 
             DiscordEmbedBuilder FinalBuilder = new DiscordEmbedBuilder
@@ -75,8 +87,8 @@ namespace BBotCore
                 Description = $"Backup finished successfully.",
             };
             await ctx.RespondAsync(embed: FinalBuilder.Build());
-            foreach (DiscordMessage m in UnpinQueue)
-                await m.UnpinAsync();
+            //foreach (DiscordMessage m in UnpinQueue)
+            //  await m.UnpinAsync();
         }
     }
 }

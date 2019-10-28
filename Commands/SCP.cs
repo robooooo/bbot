@@ -12,6 +12,7 @@ namespace BBotCore
         public async Task SCP(CommandContext ctx,
             [RemainingText(), Description("SCP no. or tale to view.")] string page)
         {
+            // REFACTOR: Use a search instead?
             string URL;
             if (int.TryParse(page, out int num))
                 URL = $"http://www.scp-wiki.net/scp-{num.ToString().PadLeft(3, '0')}";
