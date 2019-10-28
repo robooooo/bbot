@@ -51,7 +51,7 @@ namespace BBotCore
             MainAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
         }
         // Callback from errored command
-        // Will be used to display some sort oferror message
+        // Will be used to display some sort of error message
         private static async Task Commands_CommandErrored(CommandErrorEventArgs e)
         {
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder

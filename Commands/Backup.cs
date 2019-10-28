@@ -19,51 +19,48 @@ namespace BBotCore
         {
             // REFACTOR: Add support for users using citador or similar
 
-            // REFACTOR: Manual permission checks w/ owner override 
             // Important so that unpriveliged users cannnot backup to channel they don't have post permissions for
             // Also provides error handling for the case where the bot itself is unpriveliged
-            if (!(ctx.Member.IsOwner || channel.PermissionsFor(ctx.Member).HasPermission(Permissions.Administrator) || ctx.Member.Id == 110161277707399168))
+            Permissions UserPerms = channel.PermissionsFor(ctx.Member);
+            // We need to manually check for admin because it overrides these permissions
+            // Apply permission checks only to non-admins
+            if (!UserPerms.HasPermission(Permissions.Administrator))
             {
-                if (!channel.PermissionsFor(ctx.Member).HasPermission(Permissions.SendMessages))
+                if (!UserPerms.HasPermission(Permissions.SendMessages))
                     throw new Exception("You don't have permission to send messages in the target channel.");
-                if (!ctx.Channel.PermissionsFor(ctx.Member).HasPermission(Permissions.ManageMessages))
+                if (!UserPerms.HasPermission(Permissions.ManageMessages))
                     throw new Exception("You do not have permission to manage pins in the current channel.");
             }
 
             var Pins = await ctx.Channel.GetPinnedMessagesAsync();
 
-            DiscordEmbedBuilder FirstBuilder = new DiscordEmbedBuilder
+            await ctx.RespondAsync(embed: new DiscordEmbedBuilder
             {
-                Color = new DiscordColor(0xFFC800),
+                Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "💾 $backup",
                 Description = $"Backing up {Pins.Count} pins to #{channel.Name}.",
-            };
-            await ctx.RespondAsync(embed: FirstBuilder);
-
-            //var UnpinQueue = new Queue<DiscordMessage>();
+            });
 
             // We want to reverse here so that the oldest pins are posted first => newest pin is final
             // POSSIBLE REFACTOR: Move loop body to function
             foreach (var pin in Pins.Reverse())
             {
-                // REFACTOR: Determine the image to use 
-                string EmbedURL = null;
-                if (pin.Attachments.Count > 0)
-                    EmbedURL = pin.Attachments[0].Url;
-                else if (pin.Embeds.Count > 0 && pin.Embeds[0].Thumbnail != null)
-                    EmbedURL = pin.Embeds[0].Thumbnail.Url.ToString();
-
                 // Create a link pointing to the original message which can be visited
+                // We put it in the header (author) to avoid spam
                 string Link = $"https://discordapp.com/channels/{pin.Channel.GuildId}/{pin.ChannelId}/{pin.Id}";
+
+                // REFACTOR: try testing w/ UploadFile(s)Async to save avatar
 
                 // Move all this information into a postable embed
                 DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
                 {
-                    Description = pin.Content,
-                    Color = new DiscordColor(0xFFC800),
+                    Description = GetContentFromMessage(pin),
+                    Color = new DiscordColor(Consts.EMBED_COLOUR),
+                    // Author includes the image and link at the top of the page (why?)
                     Author = new DiscordEmbedBuilder.EmbedAuthor()
                     {
                         Name = pin.Author.Username,
+                        // REFACTOR: Work-around avatar changes 
                         IconUrl = pin.Author.AvatarUrl,
                         Url = Link,
                     },
@@ -71,10 +68,8 @@ namespace BBotCore
                     {
                         Text = $"#{pin.Channel.Name} | {pin.Timestamp.ToString("yyyy-MM-dd")}",
                     },
-                    ImageUrl = "",
+                    ImageUrl = GetImageURLFromMessage(pin),
                 };
-                if (EmbedURL != null)
-                    Builder.ImageUrl = EmbedURL;
 
                 await channel.SendMessageAsync(content: Link, embed: Builder.Build());
                 await pin.UnpinAsync();
@@ -82,13 +77,46 @@ namespace BBotCore
 
             DiscordEmbedBuilder FinalBuilder = new DiscordEmbedBuilder
             {
-                Color = new DiscordColor(0xFFC800),
+                Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "💾 $backup",
                 Description = $"Backup finished successfully.",
             };
             await ctx.RespondAsync(embed: FinalBuilder.Build());
-            //foreach (DiscordMessage m in UnpinQueue)
-            //  await m.UnpinAsync();
+        }
+
+        // Used above to decide which URL, if any, is used as the single image from several sources
+        static string GetImageURLFromMessage(DiscordMessage msg)
+        {
+            // Images can be uploaded inside embeds (like a yt thumbnail)...
+            foreach (var embed in msg.Embeds)
+                if (embed.Thumbnail != null)
+                    return embed.Thumbnail.Url.ToString();
+                else if (embed.Image != null)
+                    return embed.Image.Url.ToString();
+            // Or as a file (but we do this last, since it may be a file)
+            foreach (var attachment in msg.Attachments)
+                return attachment.Url; // TODO: Check if image
+            // We don't have anything that could possibly be a thumbnail
+            return "";
+        }
+
+        // Used above to decide the content of the message from several sources
+        static string GetContentFromMessage(DiscordMessage msg) 
+        {
+            // We want to decide between the content in the post or embeds
+            // So we select in the desired priority, removing if null or empty
+            if (!string.IsNullOrEmpty(msg.Content))
+            {
+                return msg.Content;
+            } 
+            else 
+            {
+                foreach (var embed in msg.Embeds)
+                    if (!string.IsNullOrEmpty(embed.Description))
+                        return embed.Description;
+            }
+            return "";
         }
     }
 }
+
