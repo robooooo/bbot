@@ -5,7 +5,6 @@ using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
 
-
 namespace BBotCore
 {
     public class Program

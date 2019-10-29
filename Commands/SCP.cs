@@ -21,13 +21,13 @@ namespace BBotCore
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {
-                Color = new DiscordColor(0xFFC800),
+                Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "🕵️ $scp",
                 // Description = $"Access authorized.",
             };
             Builder.AddField("Result:", URL);
 
-           await ctx.RespondAsync(embed: Builder.Build());
+            await ctx.RespondAsync(embed: Builder.Build());
         }
     }
 }

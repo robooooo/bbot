@@ -17,14 +17,12 @@ namespace BBotCore
             [Description("Channel to backup the pins to.")] DiscordChannel channel
         )
         {
-            // REFACTOR: Add support for users using citador or similar
-
             // Important so that unpriveliged users cannnot backup to channel they don't have post permissions for
             // Also provides error handling for the case where the bot itself is unpriveliged
             Permissions UserPerms = channel.PermissionsFor(ctx.Member);
             // We need to manually check for admin because it overrides these permissions
             // Apply permission checks only to non-admins
-            if (!UserPerms.HasPermission(Permissions.Administrator))
+            if (!UserPerms.HasPermission(Permissions.Administrator) && !ctx.Member.IsOwner)
             {
                 if (!UserPerms.HasPermission(Permissions.SendMessages))
                     throw new Exception("You don't have permission to send messages in the target channel.");
@@ -42,14 +40,11 @@ namespace BBotCore
             });
 
             // We want to reverse here so that the oldest pins are posted first => newest pin is final
-            // POSSIBLE REFACTOR: Move loop body to function
             foreach (var pin in Pins.Reverse())
             {
                 // Create a link pointing to the original message which can be visited
                 // We put it in the header (author) to avoid spam
                 string Link = $"https://discordapp.com/channels/{pin.Channel.GuildId}/{pin.ChannelId}/{pin.Id}";
-
-                // REFACTOR: try testing w/ UploadFile(s)Async to save avatar
 
                 // Move all this information into a postable embed
                 DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
@@ -60,7 +55,6 @@ namespace BBotCore
                     Author = new DiscordEmbedBuilder.EmbedAuthor()
                     {
                         Name = pin.Author.Username,
-                        // REFACTOR: Work-around avatar changes 
                         IconUrl = pin.Author.AvatarUrl,
                         Url = Link,
                     },
@@ -95,21 +89,22 @@ namespace BBotCore
                     return embed.Image.Url.ToString();
             // Or as a file (but we do this last, since it may be a file)
             foreach (var attachment in msg.Attachments)
-                return attachment.Url; // TODO: Check if image
+                if (attachment.FileSize > 0)
+                    return attachment.Url;
             // We don't have anything that could possibly be a thumbnail
             return "";
         }
 
         // Used above to decide the content of the message from several sources
-        static string GetContentFromMessage(DiscordMessage msg) 
+        static string GetContentFromMessage(DiscordMessage msg)
         {
             // We want to decide between the content in the post or embeds
             // So we select in the desired priority, removing if null or empty
             if (!string.IsNullOrEmpty(msg.Content))
             {
                 return msg.Content;
-            } 
-            else 
+            }
+            else
             {
                 foreach (var embed in msg.Embeds)
                     if (!string.IsNullOrEmpty(embed.Description))
@@ -119,4 +114,3 @@ namespace BBotCore
         }
     }
 }
-

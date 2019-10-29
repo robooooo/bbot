@@ -28,7 +28,7 @@ namespace BBotCore
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {
-                Color = new DiscordColor(0xFFC800),
+                Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "🔍 $search",
                 Description = $"Showing 4 search results",
                 Footer = new DiscordEmbedBuilder.EmbedFooter()

@@ -31,7 +31,7 @@ namespace BBotCore
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {
-                Color = new DiscordColor(0xFFC800),
+                Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "🎲 $random",
                 Description = $"From {First} to {Second}"
             };
