@@ -7,10 +7,10 @@ namespace BBotCore
 {
     public partial class Commands
     {
-        [Command("scp")]
-        [Description("Attempt to fetch an SCP from the offical SCP site.")]
+        [Command("SCP")]
+        [Description("links to an SCP or tale from the SCP wiki")]
         public async Task SCP(CommandContext ctx,
-            [RemainingText(), Description("SCP no. or tale to view.")] string page)
+            [RemainingText(), Description("SCP number or tale name to search for")] string page)
         {
             // REFACTOR: Use a search instead?
             string URL;

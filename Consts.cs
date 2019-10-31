@@ -10,6 +10,13 @@ namespace BBotCore
         public static Dictionary<string, string> VERSION_INFO = new Dictionary<string, string>()
             {
                 {
+                    "4.1.0",
+
+                    " - **Major overhaul of BBot**\n" +
+                    " - Plenty of under-the-hood optimisations and improvements\n" +
+                    " - Added a custom help formatter, try `$help` and take it for a spin\n" 
+                },
+                {
                     "4.0.5",
 
                     "- It used to be the case that `$backup` would crash the bot. Now it isn't.\n" +
@@ -18,7 +25,7 @@ namespace BBotCore
                 {
                     "4.0.4",
 
-                    "- Added an `$scp` command due to a user's request.\n" +
+                    "- Added an `$SCP` command due to a user's request.\n" +
                     "- The command fetches an SCP or tale from the scp site."
                 },
                 {

@@ -12,9 +12,9 @@ namespace BBotCore
     {
         [Command("search")]
         [Aliases("s", "google")]
-        [Description("Backup all the pins in the current channel to a different channel.")]
+        [Description("searches for a query on google")]
         public async Task Search(CommandContext ctx,
-                [RemainingText(), Description("Term to search for.")] string query
+                [RemainingText(), Description("term to search for")] string query
         )
         {
             var CSE = CSS.Cse.List(query);
@@ -52,7 +52,7 @@ namespace BBotCore
             {
                 DiscordEmbedBuilder EditedBuilder = new DiscordEmbedBuilder
                 {
-                    Color = new DiscordColor(0xFFC800),
+                    Color = new DiscordColor(Consts.EMBED_COLOUR),
                     Title = "🔍 $search",
                     Description = $"Showing all search results.",
                     Footer = new DiscordEmbedBuilder.EmbedFooter()

@@ -11,9 +11,9 @@ namespace BBotCore
     {
         [Command("changelog")]
         [Aliases("changes", "version")]
-        [Description("View the changelog for BBot.")]
+        [Description("posts changelog information for BBot")]
         public async Task Changelog(CommandContext ctx,
-     [Description("Version to view the changelog for")] string version = "No version specified."
+     [Description("version to view changes for, but can be omitted to view the latest versions")] string version = "showing the latest three versions"
  )
         {
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder()

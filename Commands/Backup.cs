@@ -12,9 +12,9 @@ namespace BBotCore
     public partial class Commands
     {
         [Command("backup")]
-        [Description("Backup all the pins in the current channel to a different channel.")]
+        [Description("backs up all the pins in the current channel to another channel")]
         public async Task Backup(CommandContext ctx,
-            [Description("Channel to backup the pins to.")] DiscordChannel channel
+            [Description("channel the pins will be backed up to")] DiscordChannel channel
         )
         {
             // Important so that unpriveliged users cannnot backup to channel they don't have post permissions for
