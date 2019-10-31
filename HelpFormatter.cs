@@ -39,7 +39,11 @@ namespace BBotCore
 
         public IHelpFormatter WithDescription(string description)
         {
-            Description = description;
+            // Again, hack to get around static descriptions for help command
+            if (description.Equals("Displays command help."))
+                Description = "Lists all commands or display help for a certain command.";
+            else
+                Description = description;
             return this;
         }
 
@@ -122,6 +126,8 @@ namespace BBotCore
         {
             if (!IsCommandPassed)
                 Builder.Description = "Listing all of BBot's commands.";
+            else
+                Builder.Description = $"The command `${Name}` {Description}. Its parameters are shown below.";
             return new CommandHelpMessage(embed: Builder.Build());
         }
 
