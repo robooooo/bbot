@@ -42,13 +42,16 @@ namespace BBotCore
             {
                 // We want a human-readable string
                 StringBuilder sb = new StringBuilder();
-                if (arg.DefaultValue != null)
-                    sb.Append($"This argument has default value `{arg.DefaultValue}`. ");
-                sb.Append("It is ");
+
+                // e.g.
+                // This parameter is an optional string of text with default value `4.0.5`
+                sb.Append("This parameter is a");
                 if (arg.IsOptional)
-                    sb.Append($"optional and ");
-                sb.Append($"of type `{arg.Type}`. ");
-                sb.Append(arg.Description);
+                    sb.Append("n optional");
+                sb.Append($" {TypeToReadableString(arg.Type)}");
+                if (arg.DefaultValue != null)
+                    sb.Append($", with default value `{arg.DefaultValue}`");
+                sb.Append(".");
 
                 Builder.AddField($"{arg.Name}:", sb.ToString(), inline: true);
             }
@@ -73,6 +76,22 @@ namespace BBotCore
         public CommandHelpMessage Build()
         {
             return new CommandHelpMessage(embed: Builder.Build());
+        }
+
+        private string TypeToReadableString(System.Type type)
+        {
+            if (type == typeof(string))
+                return "string of text";
+            else if (type == typeof(int))
+                return "number";
+            else if (type == typeof(uint))
+                return "positive number";
+            else if (type == typeof(DiscordChannel))
+                return "channel in this server";
+            else if (type == typeof(DiscordEmoji))
+                return "emoji in this server";
+            else
+                return "unknown (submit a bug report?)";
         }
     }
 }

@@ -47,6 +47,7 @@ namespace BBotCore
 
             Commands.CommandErrored += Commands_CommandErrored;
             Commands.RegisterCommands<Commands>();
+            Commands.SetHelpFormatter<HelpFormatter>();
             MainAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
         }
         // Callback from errored command
