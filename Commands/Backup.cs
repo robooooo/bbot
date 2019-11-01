@@ -62,10 +62,25 @@ namespace BBotCore
                     {
                         Text = $"#{pin.Channel.Name} | {pin.Timestamp.ToString("yyyy-MM-dd")}",
                     },
-                    ImageUrl = GetImageURLFromMessage(pin),
+                    
                 };
 
-                await channel.SendMessageAsync(content: Link, embed: Builder.Build());
+                string ImageUrl = GetImageURLFromMessage(pin);
+                if (ImageUrl != null)
+                    Builder.ImageUrl = ImageUrl;
+
+                // There are still some cases this command can't handle, e.g. videos
+                // This is a contingency for this one case - we can link directly to the video
+                bool IsKnownImageExtension = 
+                    new string[] {".jpg", ".jpeg", ".png", ".bmp", ".gif"}
+                    .Any(ext => ImageUrl?.EndsWith(ext) ?? false);
+
+                // Include link iff we're dealing with a link, but the format isn't an image
+                if (!IsKnownImageExtension && ImageUrl != null)
+                    await channel.SendMessageAsync(content: Link, embed: Builder.Build());
+                else 
+                    await channel.SendMessageAsync(embed: Builder.Build());
+                
                 await pin.UnpinAsync();
             }
 
@@ -83,16 +98,21 @@ namespace BBotCore
         {
             // Images can be uploaded inside embeds (like a yt thumbnail)...
             foreach (var embed in msg.Embeds)
-                if (embed.Thumbnail != null)
-                    return embed.Thumbnail.Url.ToString();
-                else if (embed.Image != null)
-                    return embed.Image.Url.ToString();
+            {
+                string ThumbnailURL = embed.Thumbnail?.Url?.ToString();
+                string ImageURL = embed.Image?.Url?.ToString();
+
+                if (!String.IsNullOrWhiteSpace(ThumbnailURL)) 
+                    return ThumbnailURL;
+                else if (!String.IsNullOrWhiteSpace(ImageURL)) 
+                    return ImageURL;
+            }
             // Or as a file (but we do this last, since it may be a file)
             foreach (var attachment in msg.Attachments)
                 if (attachment.FileSize > 0)
                     return attachment.Url;
             // We don't have anything that could possibly be a thumbnail
-            return "";
+            return null;
         }
 
         // Used above to decide the content of the message from several sources
@@ -100,14 +120,14 @@ namespace BBotCore
         {
             // We want to decide between the content in the post or embeds
             // So we select in the desired priority, removing if null or empty
-            if (!string.IsNullOrEmpty(msg.Content))
+            if (!string.IsNullOrWhiteSpace(msg.Content))
             {
                 return msg.Content;
             }
             else
             {
                 foreach (var embed in msg.Embeds)
-                    if (!string.IsNullOrEmpty(embed.Description))
+                    if (!string.IsNullOrWhiteSpace(embed.Description))
                         return embed.Description;
             }
             return "";
