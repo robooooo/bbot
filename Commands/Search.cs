@@ -17,10 +17,12 @@ namespace BBotCore
                 [RemainingText(), Description("term to search for")] string query
         )
         {
+            // Snippet gets our search results stored in Search
             var CSE = CSS.Cse.List(query);
             CSE.Cx = Environment.GetEnvironmentVariable("SEARCH_CX");
             var Search = await CSE.ExecuteAsync();
 
+            // Needed to tabulate search results
             string[] Titles = new string[]
             {
                 "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth",
@@ -39,7 +41,7 @@ namespace BBotCore
 
             for (int i = 0; i < 4; i++)
                 if (Search.Items[i] != null)
-                    Builder.AddField($"{Titles[i]} Result:", Search.Items[i].Link, true);
+                    Builder.AddField($"{Titles[i]} Result", Search.Items[i].Link, true);
 
             // REFACTOR: Add react?
             var EmbedMessage = await ctx.RespondAsync(embed: Builder.Build());
@@ -63,7 +65,7 @@ namespace BBotCore
 
                 for (int i = 0; i < 10; i++)
                     if (Search.Items[i] != null)
-                        EditedBuilder.AddField($"{Titles[i]} Result:", Search.Items[i].FormattedUrl, true);
+                        EditedBuilder.AddField($"{Titles[i]} Result", Search.Items[i].FormattedUrl, true);
 
                 // We delete this because it looks better and will not spam the chat
                 await UrlMesage.DeleteAsync();

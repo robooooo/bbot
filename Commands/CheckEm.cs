@@ -35,7 +35,7 @@ namespace BBotCore
                 Title = "🍀 $roll",
                 Description = $"Check em'"
             };
-            Builder.AddField(name: "Result:", value: $"{Out}");
+            Builder.AddField(name: "Result", value: $"{Out}");
             await ctx.RespondAsync(embed: Builder.Build());
         }
     }

@@ -25,7 +25,7 @@ namespace BBotCore
                 Title = "🎲 $random",
                 Description = $"From {lower} to {higher}"
             };
-            Builder.AddField(name: "Result:", value: $"{Num}");
+            Builder.AddField(name: "Result", value: $"{Num}");
             await ctx.RespondAsync(embed: Builder.Build());
         }
     }

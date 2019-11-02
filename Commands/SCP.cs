@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System;
 using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -12,12 +13,20 @@ namespace BBotCore
         public async Task SCP(CommandContext ctx,
             [RemainingText(), Description("SCP number or tale name to search for")] string page)
         {
-            // REFACTOR: Use a search instead?
-            string URL;
+
+            string Query;
+            // Craft a search parameter to get more accurate results
+            // We limit our search to the scp-wiki site
+            // And format numerica SCPs, padding left with 0s to length 3
             if (int.TryParse(page, out int num))
-                URL = $"http://www.scp-wiki.net/scp-{num.ToString().PadLeft(3, '0')}";
+                Query = $"site:www.scp-wiki.net {page.PadLeft(3, '0')}";
             else
-                URL = $"http://www.scp-wiki.net/{page.Replace(" ", "-")}";
+                Query = $"site:www.scp-wiki.net {page}";
+
+
+            var CSE = CSS.Cse.List(Query);
+            CSE.Cx = Environment.GetEnvironmentVariable("SEARCH_CX");
+            var Search = await CSE.ExecuteAsync();
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {
@@ -25,7 +34,7 @@ namespace BBotCore
                 Title = "🕵️ $scp",
                 // Description = $"Access authorized.",
             };
-            Builder.AddField("Result:", URL);
+            Builder.AddField("Result", Search.Items[0].Link);
 
             await ctx.RespondAsync(embed: Builder.Build());
         }

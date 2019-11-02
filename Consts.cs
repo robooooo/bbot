@@ -16,6 +16,7 @@ namespace BBotCore
                     " - Plenty of under-the-hood optimisations and improvements.\n" +
                     " - Added a custom help formatter, try `$help` and take it for a spin!\n" +
                     " - Changed around some older commands to work a bit more intuitively\n" +
+                    " - `$scp` will now provide much more accurate results\n" +
                     " - **Major improvements to `$backup`.**\n" +
                     " - `$backup` now links to posts when something failed to be displayed properly.\n" +
                     " - Otherwise, the post is linked under the author's name.\n" +
