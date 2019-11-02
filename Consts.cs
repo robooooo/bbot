@@ -13,8 +13,17 @@ namespace BBotCore
                     "4.1.0",
 
                     " - **Major overhaul of BBot**\n" +
-                    " - Plenty of under-the-hood optimisations and improvements\n" +
-                    " - Added a custom help formatter, try `$help` and take it for a spin\n" 
+                    " - Plenty of under-the-hood optimisations and improvements.\n" +
+                    " - Added a custom help formatter, try `$help` and take it for a spin!\n" +
+                    " - Changed around some older commands to work a bit more intuitively\n" +
+                    " - **Major improvements to `$backup`.**\n" +
+                    " - `$backup` now links to posts when something failed to be displayed properly.\n" +
+                    " - Otherwise, the post is linked under the author's name.\n" +
+                    " - `$backup` will no longer stop displaying author's avatars when they change them.\n" +
+                    " - `$backup` will now support users using citador or similar posts.\n" +
+                    " - More specifically, when a message has no text, but an embed in it does...\n" +
+                    " - ...it will take the message content from an embed."
+
                 },
                 {
                     "4.0.5",

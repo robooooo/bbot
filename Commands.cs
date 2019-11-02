@@ -1,6 +1,7 @@
 ﻿using System;
 using Google.Apis.Customsearch.v1;
 using Google.Apis.Services;
+using ImgurSharp;
 
 namespace BBotCore
 {
@@ -12,5 +13,7 @@ namespace BBotCore
             ApplicationName = "BBot",
             ApiKey = Environment.GetEnvironmentVariable("SEARCH_KEY"),
         });
+
+        private static Imgur ImgurClient = new Imgur(Environment.GetEnvironmentVariable("IMGUR_TOKEN"));
     }
 }

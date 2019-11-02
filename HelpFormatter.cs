@@ -1,5 +1,6 @@
 using System.Text;
 using System.Linq;
+using System.Collections.Generic;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
@@ -7,7 +8,7 @@ using DSharpPlus.CommandsNext.Converters;
 using DSharpPlus.CommandsNext.Entities;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Interactivity;
-using System.Collections.Generic;
+
 
 namespace BBotCore
 {
@@ -53,10 +54,11 @@ namespace BBotCore
             {
                 // We want a human-readable string
                 StringBuilder sb = new StringBuilder();
-                
+
                 // Special case for calling the help command to override the default description
                 // (because it meshes badly with our formatting)
-                if (arg.Description.Equals("Command to provide help for.")) {
+                if (arg.Description.Equals("Command to provide help for."))
+                {
                     Builder.AddField(
                         "Command",
                         $"This parameter is an optional {TypeToReadableString(typeof(string))}. It is the command to provide help for.",

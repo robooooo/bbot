@@ -1,11 +1,11 @@
-﻿using DSharpPlus;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BBotCore
 {
@@ -31,6 +31,7 @@ namespace BBotCore
             }
 
             var Pins = await ctx.Channel.GetPinnedMessagesAsync();
+            var Imgur = new ImgurHelper(ImgurClient);
 
             await ctx.RespondAsync(embed: new DiscordEmbedBuilder
             {
@@ -55,14 +56,14 @@ namespace BBotCore
                     Author = new DiscordEmbedBuilder.EmbedAuthor()
                     {
                         Name = pin.Author.Username,
-                        IconUrl = pin.Author.AvatarUrl,
+                        IconUrl = await Imgur.GetURLFromUser(pin.Author),
                         Url = Link,
                     },
                     Footer = new DiscordEmbedBuilder.EmbedFooter()
                     {
                         Text = $"#{pin.Channel.Name} | {pin.Timestamp.ToString("yyyy-MM-dd")}",
                     },
-                    
+
                 };
 
                 string ImageUrl = GetImageURLFromMessage(pin);
@@ -71,16 +72,16 @@ namespace BBotCore
 
                 // There are still some cases this command can't handle, e.g. videos
                 // This is a contingency for this one case - we can link directly to the video
-                bool IsKnownImageExtension = 
-                    new string[] {".jpg", ".jpeg", ".png", ".bmp", ".gif"}
+                bool IsKnownImageExtension =
+                    new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif" }
                     .Any(ext => ImageUrl?.EndsWith(ext) ?? false);
 
                 // Include link iff we're dealing with a link, but the format isn't an image
                 if (!IsKnownImageExtension && ImageUrl != null)
                     await channel.SendMessageAsync(content: Link, embed: Builder.Build());
-                else 
+                else
                     await channel.SendMessageAsync(embed: Builder.Build());
-                
+
                 await pin.UnpinAsync();
             }
 
@@ -102,9 +103,9 @@ namespace BBotCore
                 string ThumbnailURL = embed.Thumbnail?.Url?.ToString();
                 string ImageURL = embed.Image?.Url?.ToString();
 
-                if (!String.IsNullOrWhiteSpace(ThumbnailURL)) 
+                if (!String.IsNullOrWhiteSpace(ThumbnailURL))
                     return ThumbnailURL;
-                else if (!String.IsNullOrWhiteSpace(ImageURL)) 
+                else if (!String.IsNullOrWhiteSpace(ImageURL))
                     return ImageURL;
             }
             // Or as a file (but we do this last, since it may be a file)
