@@ -41,12 +41,20 @@ namespace BBotCore
 
             for (int i = 0; i < 4; i++)
                 if (Search.Items[i] != null)
-                    Builder.AddField($"{Titles[i]} Result", Search.Items[i].Link, true);
+                    Builder.AddField($"{Titles[i]} Result", Search.Items[i].Link, inline: false);
 
             // REFACTOR: Add react?
             var EmbedMessage = await ctx.RespondAsync(embed: Builder.Build());
             var UrlMesage = await ctx.RespondAsync($"{Search.Items[0].Link}");
+            // Make it easier for users to react by adding our own reaction
 
+            // This is fine, since DM commands are turned off
+            var Permissions = ctx.Channel.PermissionsFor(ctx.Guild.CurrentMember);
+            if (Permissions.HasPermission(Permissions.AddReactions) || Permissions.HasPermission(Permissions.Administrator))
+                await EmbedMessage.CreateReactionAsync(DiscordEmoji.FromName(ctx.Client, ":mag:"));
+
+            // We want to wait a bit so that we don't trigger from our own reaction
+            await Task.Delay(1500);
             var Interact = ctx.Client.GetInteractivityModule();
             var Result = await Interact.WaitForReactionAsync(e => true, timeoutoverride: TimeSpan.FromSeconds(60));
 
@@ -65,7 +73,7 @@ namespace BBotCore
 
                 for (int i = 0; i < 10; i++)
                     if (Search.Items[i] != null)
-                        EditedBuilder.AddField($"{Titles[i]} Result", Search.Items[i].FormattedUrl, true);
+                        EditedBuilder.AddField($"{Titles[i]} Result", Search.Items[i].FormattedUrl, inline: false);
 
                 // We delete this because it looks better and will not spam the chat
                 await UrlMesage.DeleteAsync();
