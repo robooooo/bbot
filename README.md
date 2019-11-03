@@ -1,6 +1,6 @@
 ## BBot For Discord
 
-## BBot
+### BBot
 
 BBot is a a general-purpose discord bot with the killer feature of backing up pins to a dedicated channel in order to effectively bypass the 50-pin limit imposed by discord. It's written in C# with DSharpPlus and can be accessed using the `$` prefix or by mention.
 
@@ -19,6 +19,8 @@ BBot is a a general-purpose discord bot with the killer feature of backing up pi
 The backup command is the main feature of this bot and the reason it was written. It can take up to 50 pins from a channel and post them using a stylish embed in the channel of your choice, which makes it perfect for server administration. It supports text, images, videos and users using plugins such as citador. It provides direct links to posts so you can go back in case anything goes wrong, or if you're just curious about what went down when.
 
 ![Before Backup](https://i.imgur.com/JjKjsTJ.png)
+
+becomes
 
 ![After Backup](https://i.imgur.com/H1lJ4sB.png)
 
