@@ -25,8 +25,10 @@ namespace BBotCore
                 LogLevel = LogLevel.Debug,
                 MessageCacheSize = 128,
                 // Caused issues with crashing & stalling 
-                AutoReconnect = false,
+                // However, we'll try it for now
+                AutoReconnect = true,
             });
+
             Commands = Discord.UseCommandsNext(new CommandsNextConfiguration
             {
                 CaseSensitive = false,
@@ -35,6 +37,7 @@ namespace BBotCore
                 EnableDms = false,
                 EnableMentionPrefix = true,
             });
+
             Interactivity = Discord.UseInteractivity(new InteractivityConfiguration()
             {
                 Timeout = TimeSpan.FromMinutes(1),
@@ -46,6 +49,7 @@ namespace BBotCore
             };
 
             Commands.CommandErrored += Commands_CommandErrored;
+
             Commands.RegisterCommands<Commands>();
             Commands.SetHelpFormatter<HelpFormatter>();
             MainAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
