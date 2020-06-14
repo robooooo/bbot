@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -18,9 +19,8 @@ namespace BBotCore
         )
         {
             // Snippet gets our search results stored in Search
-            var CSE = CSS.Cse.List(query);
-            CSE.Cx = Environment.GetEnvironmentVariable("SEARCH_CX");
-            var Search = await CSE.ExecuteAsync();
+            SearchHelper Search = new SearchHelper(CSS);
+            List<string> Results = await Search.AsyncSearchFor(query);
 
             // Needed to tabulate search results
             string[] Titles = new string[]
@@ -40,12 +40,11 @@ namespace BBotCore
             };
 
             for (int i = 0; i < 4; i++)
-                if (Search.Items[i] != null)
-                    Builder.AddField($"{Titles[i]} Result", Search.Items[i].Link, inline: false);
+                Builder.AddField($"{Titles[i]} Result", Results[i], inline: false);
 
             // REFACTOR: Add react?
             var EmbedMessage = await ctx.RespondAsync(embed: Builder.Build());
-            var UrlMesage = await ctx.RespondAsync($"{Search.Items[0].Link}");
+            var UrlMesage = await ctx.RespondAsync($"{Results[0]}");
             // Make it easier for users to react by adding our own reaction
 
             // This is fine, since DM commands are turned off
@@ -72,8 +71,7 @@ namespace BBotCore
                 };
 
                 for (int i = 0; i < 10; i++)
-                    if (Search.Items[i] != null)
-                        EditedBuilder.AddField($"{Titles[i]} Result", Search.Items[i].FormattedUrl, inline: false);
+                    EditedBuilder.AddField($"{Titles[i]} Result", Results[i], inline: false);
 
                 // We delete this because it looks better and will not spam the chat
                 await UrlMesage.DeleteAsync();
