@@ -22,6 +22,8 @@ The pin-backup feature is the main reason you'll want to be using bbot, and the 
 
 [Add BBot to your server right now!](https://discordapp.com/oauth2/authorize?client_id=362666654452416524&scope=bot&permissions=92224)
 
+[Join our discord server!](https://discord.com/invite/YAXQC2Q)
+
 Or check it out online:
 
 + [Top.gg Bots](https://top.gg/bot/362666654452416524)
