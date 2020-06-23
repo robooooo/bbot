@@ -10,7 +10,6 @@ BBot is a a general-purpose discord bot with the killer feature of backing up pi
 + **Autopin** will help your community remember its best moments.
 + **Backup** helps you manage your servers by moving your pinned messages.
 + **Search** searches for a query on google.
-
 + **Changelog** posts the version information for BBot.
 
 ### The Backup Feature
@@ -23,4 +22,9 @@ The pin-backup feature is the main reason you'll want to be using bbot, and the 
 
 [Add BBot to your server right now!](https://discordapp.com/oauth2/authorize?client_id=362666654452416524&scope=bot&permissions=92224)
 
-Or check it out online (coming soon)
+Or check it out online:
+
++ [Top.gg Bots](https://top.gg/bot/362666654452416524)
++ [DiscordBots.gg](https://discord.bots.gg/bots/362666654452416524)
++ [Discord Bot List](https://discordbotlist.com/bots/bbot)
++ [BotsOnDiscord.xyz](https://bots.ondiscord.xyz/bots/362666654452416524)
