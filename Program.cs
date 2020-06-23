@@ -15,8 +15,9 @@ namespace BBotCore
 
         public static void Main(string[] args)
         {
-            // Init. with bot token
-            string Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
+            // Initialise with bot token
+            string Token = Environment.GetEnvironmentVariable("DISCORD_BETA_TOKEN");
+            // string Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
             Discord = new DiscordClient(new DiscordConfiguration
             {
                 Token = Token,
@@ -48,25 +49,13 @@ namespace BBotCore
                 await Discord.UpdateStatusAsync(new DiscordGame("$changelog 4.1.0"));
             };
 
-            Commands.CommandErrored += Commands_CommandErrored;
+            Commands.CommandErrored += Events.CommandErrored;
+            Discord.MessageReactionAdded += Events.MessageReactionAdded;
+            Discord.ChannelPinsUpdated += Events.ChannelPinsUpdated;
 
             Commands.RegisterCommands<Commands>();
             Commands.SetHelpFormatter<HelpFormatter>();
             MainAsync(args).ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-        // Callback from errored command
-        // Will be used to display some sort of error message
-        private static async Task Commands_CommandErrored(CommandErrorEventArgs e)
-        {
-            DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
-            {
-                Color = new DiscordColor(0xB00020),
-                Title = "❌ Error!",
-                Description = $"In ${e.Command.Name}",
-            };
-            Builder.AddField("Reason:", e.Exception.Message);
-            //Builder.AddField("Stack Trace:", $"```{e.Exception.StackTrace}```");
-            await e.Context.Channel.SendMessageAsync(embed: Builder.Build());
         }
 
         private static async Task MainAsync(string[] args)

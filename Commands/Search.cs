@@ -19,7 +19,7 @@ namespace BBotCore
         )
         {
             // Snippet gets our search results stored in Search
-            SearchHelper Search = new SearchHelper(CSS);
+            SearchHelper Search = Commands.SearchHelper;
             List<string> Results = await Search.AsyncSearchFor(query);
 
             // Needed to tabulate search results
