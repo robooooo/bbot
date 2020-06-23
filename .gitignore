@@ -2,3 +2,5 @@
 bin/
 obj/
 *.code-workspace
+bbot.db
+*/bbot.db
