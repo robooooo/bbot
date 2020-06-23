@@ -20,10 +20,16 @@ namespace BBotCore
             {
                 Color = new DiscordColor(0xB00020),
                 Title = "❌ Error!",
-                Description = $"In ${e.Command.Name}",
+                Description = $"In `${e.Command.Name}`",
             };
-            Builder.AddField("Reason:", e.Exception.Message);
-            //Builder.AddField("Stack Trace:", $"```{e.Exception.StackTrace}```");
+
+            Exception ex = e.Exception;
+            while (ex != null)
+            {
+                Builder.AddField("Reason:", e.Exception.Message);
+                ex = ex.InnerException;
+            }
+            // Builder.AddField("Stack Trace:", $"```{e.Exception.StackTrace}```");
             await e.Context.Channel.SendMessageAsync(embed: Builder.Build());
         }
 
@@ -39,11 +45,14 @@ namespace BBotCore
 
             try
             {
-                uint Threshhold = Commands.DatabaseHelper.getAutopinLimit(e.Channel.Id);
-                int PinReacts = e.Message.Reactions.Where(r => r.Emoji.Equals(PinEmoji)).Count();
-                if (Threshhold != 0 && PinReacts >= Threshhold)
-                    await e.Message.PinAsync();
-                    
+                uint? MaybeThreshhold = await Commands.DatabaseHelper.GetAutopinLimit(e.Channel.Id);
+                if (MaybeThreshhold is uint Threshhold)
+                {
+                    int PinReacts = e.Message.Reactions.Where(r => r.Emoji.Equals(PinEmoji)).First().Count;
+                    // Do not pin when the threshhold is zero - this special value disables the feature for this channel.
+                    if (Threshhold != 0 && PinReacts >= Threshhold)
+                        await e.Message.PinAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -61,15 +70,18 @@ namespace BBotCore
         // Used to trigger the autobackup feature.
         public static async Task ChannelPinsUpdated(ChannelPinsUpdateEventArgs e)
         {
-            // Trigger autobackup iff over 45 pins: sane limit with some leeway in case a few are missed.
             var Pins = await e.Channel.GetPinnedMessagesAsync();
             try
             {
-                if (Pins.Count >= 3)
+                // Trigger autobackup iff over 45 pins: sane limit with some leeway in case a few are missed.
+                if (Pins.Count >= 45)
                 {
-                    ulong destinationId = Commands.DatabaseHelper.getAutobackupDestination(e.Channel.Id);
-                    DiscordChannel destination = e.Channel.Guild.GetChannel(destinationId);
-                    await Commands.BackupHelper.DoBackup(e.Channel, destination);
+                    ulong? MaybeDestId = await Commands.DatabaseHelper.GetAutobackupDestination(e.Channel.Id);
+                    if (MaybeDestId is ulong destId)
+                    {
+                        DiscordChannel destination = e.Channel.Guild.GetChannel(destId);
+                        await Commands.BackupHelper.DoBackup(e.Channel, destination);
+                    }
                 }
             }
             catch (Exception ex)

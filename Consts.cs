@@ -6,9 +6,17 @@ namespace BBotCore
     {
         public static int EMBED_COLOUR = 0xFFC800;
 
-
         public static Dictionary<string, string> VERSION_INFO = new Dictionary<string, string>()
             {
+                {
+                    "4.2.0",
+
+                    " - **Added `$autopin` and `$autobackup` features!**\n" +
+                    " - The `$autopin` command allows you to set a limit, if the number of pushpin reactions on a message in the current channel reaches this point, the message is pinned.\n" +
+                    " - The `$autobackup` command allows you to set a channel, if the pin limit in the current channel is near, the bot will backup all of the messages!\n" +
+                    " - For the time being, the `$nobackup` command can be used to disable said autobackup functionality.\n" +
+                    " - Minor changes to spelling of some help information."
+                },
                 {
                     "4.1.0",
 
@@ -22,9 +30,7 @@ namespace BBotCore
                     " - `$backup` now links to posts when something failed to be displayed properly.\n" +
                     " - Otherwise, the post is linked under the author's name.\n" +
                     " - `$backup` will no longer stop displaying author's avatars when they change them.\n" +
-                    " - `$backup` will now support users using citador or similar posts.\n" +
-                    " - More specifically, when a message has no text, but an embed in it does...\n" +
-                    " - ...it will take the message content from an embed."
+                    " - `$backup` will now support messages contained in embeds."
 
                 },
                 {
@@ -55,8 +61,7 @@ namespace BBotCore
 
                     "- Fixed a bug where `$search` results would contain spaces.\n" +
                     "- Fixed a bug where `$search` results would have malformatted links.\n" +
-                    "- `$backup` results now feature a link to the post.\n" +
-                    "- Currently, these may open in a browser tab - discord's fault, they won't if you paste them into chat."
+                    "- `$backup` results now feature a link to the post.\n"
                 },
                 {
                     "4.0.0",

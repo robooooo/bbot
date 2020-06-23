@@ -19,14 +19,15 @@ namespace BBotCore
         {
             // Important so that unpriveliged users cannnot backup to channel they don't have post permissions for
             // Also provides error handling for the case where the bot itself is unpriveliged
-            Permissions UserPerms = destination.PermissionsFor(ctx.Member);
+            Permissions HerePerms = destination.PermissionsFor(ctx.Member);
+            Permissions TherePerms = destination.PermissionsFor(ctx.Member);
             // We need to manually check for admin because it overrides these permissions
             // Apply permission checks only to non-admins
-            if (!UserPerms.HasPermission(Permissions.Administrator) && !ctx.Member.IsOwner)
+            if (!ctx.Member.IsOwner && !(HerePerms.HasPermission(Permissions.Administrator) && TherePerms.HasPermission(Permissions.Administrator)))
             {
-                if (!UserPerms.HasPermission(Permissions.SendMessages))
+                if (!TherePerms.HasPermission(Permissions.SendMessages))
                     throw new Exception("You don't have permission to send messages in the target channel.");
-                if (!UserPerms.HasPermission(Permissions.ManageMessages))
+                if (!HerePerms.HasPermission(Permissions.ManageMessages))
                     throw new Exception("You do not have permission to manage pins in the current channel.");
             }
 

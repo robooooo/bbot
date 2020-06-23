@@ -4,6 +4,7 @@ using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
+using Microsoft.Data.Sqlite;
 
 namespace BBotCore
 {
@@ -16,8 +17,8 @@ namespace BBotCore
         public static void Main(string[] args)
         {
             // Initialise with bot token
-            string Token = Environment.GetEnvironmentVariable("DISCORD_BETA_TOKEN");
-            // string Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
+            // string Token = Environment.GetEnvironmentVariable("DISCORD_BETA_TOKEN");
+            string Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
             Discord = new DiscordClient(new DiscordConfiguration
             {
                 Token = Token,
