@@ -47,7 +47,7 @@ namespace BBotCore
 
             Discord.Ready += async (e) =>
             {
-                await Discord.UpdateStatusAsync(new DiscordGame("$changelog 4.1.0"));
+                await Discord.UpdateStatusAsync(new DiscordGame("$changelog 4.2.0"));
             };
 
             Commands.CommandErrored += Events.CommandErrored;
