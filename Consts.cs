@@ -9,6 +9,17 @@ namespace BBotCore
         public static Dictionary<string, string> VERSION_INFO = new Dictionary<string, string>()
             {
                 {
+                    "4.3.0",
+
+                    " - Updated the internal framework that BBot uses, allowing for more features to be added.\n" +
+                    " - Updated the `$help` command to list command's aliases." +
+                    " - Updated the `$autopin` and `$autobackup` commands; now both of these features can be disabled by providing no arguments.\n" +
+                    " - Due to this, the `$noautobackup` command has been removed.\n" +
+                    " - Additionally, the `$random` command has been removed.\n" +
+                    " - Fixed an issue where disabling auto-backups in a channel did not require the manage messages permission." + 
+                    " - Updated the wording in many commands to fix inconsistencies and bugs."
+                },
+                {
                     "4.2.0",
 
                     " - **Added `$autopin` and `$autobackup` features!**\n" +

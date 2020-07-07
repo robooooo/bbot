@@ -14,7 +14,7 @@ namespace BBotCore
         [Command("autobackup")]
         [Description("configures automatically backing up pinned messages to an overflow channel when the limit is near")]
         public async Task Autobackup(CommandContext ctx,
-            [Description("channel the pins will be backed up to, and it can be omitted to disable the feature in this channel")] DiscordChannel destination
+            [Description("channel the pins will be backed up to, but can be omitted to disable the feature in this channel instead")] DiscordChannel destination
         )
         {
             Permissions HerePerms = destination.PermissionsFor(ctx.Member);
@@ -36,16 +36,22 @@ namespace BBotCore
                 Title = "⤵️ $autobackup",
                 Description = $"Updated Configuration"
             };
-            Builder.AddField(name: "Configuration", value: $"When there are 45 pinned messags in this channel, they will all be backed up to #{destination.Name}.");
+            Builder.AddField(name: "Configuration", value: $"When there are nearly fifty pinned messages in this channel, they will all be backed up to **#{destination.Name}**.");
+            Builder.AddField(name: "Info", value: $"This feature can be disabled by typing only `$autobackup` with no arguments.");
             await ctx.RespondAsync(embed: Builder.Build());
         }
 
-        // Large TODO: Update to use overloads
-        [Command("noautobackup")]
-        [Aliases("nobackup")]
-        [Description("disables automatically backing up pinned messages to an overflow channel when the limit is near")]
+        [Command("autobackup")]
         public async Task Autobackup(CommandContext ctx)
         {
+            Permissions HerePerms = ctx.Channel.PermissionsFor(ctx.Member);
+            // Apply permission checks only to non-admins
+            if (!ctx.Member.IsOwner && !HerePerms.HasPermission(Permissions.Administrator))
+            {
+                if (!HerePerms.HasPermission(Permissions.ManageMessages))
+                    throw new Exception("You do not have permission to manage pins in the current channel.");
+            }
+
             await DatabaseHelper.ClearAutobackupDestination(ctx.Channel.Id);
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder

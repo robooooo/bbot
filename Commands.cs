@@ -2,10 +2,11 @@
 using Google.Apis.Customsearch.v1;
 using Google.Apis.Services;
 using ImgurSharp;
+using DSharpPlus.CommandsNext;
 
 namespace BBotCore
 {
-    public partial class Commands
+    public partial class Commands : BaseCommandModule
     {
         private static Random RNG = new Random();
         private static CustomsearchService CSS = new CustomsearchService(new BaseClientService.Initializer()

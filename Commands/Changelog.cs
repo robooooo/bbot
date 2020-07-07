@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
@@ -13,29 +14,41 @@ namespace BBotCore
         [Aliases("changes", "version")]
         [Description("posts changelog information for BBot")]
         public async Task Changelog(CommandContext ctx,
-     [Description("version to view changes for, but can be omitted to view the latest versions")] string version = "showing the latest three versions"
- )
+            [Description("version to view changes for, but can be omitted to view the latest versions")] string version
+        )
         {
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "🕒 $changelog",
             };
-            // Usage is $changelog ver. or simply $changelog
-            // So we search and find ver. if it exists 
-            if (Consts.VERSION_INFO.ContainsKey(version))
+
+            if (!Consts.VERSION_INFO.ContainsKey(version))
             {
-                Builder.Description = "Showing specified version.";
-                Builder.AddField($"Version {version}", Consts.VERSION_INFO[version]);
-            }
-            else
-            {
-                Builder.Description = "Showing past 3 versions.";
-                foreach (var pair in Consts.VERSION_INFO.Take(3))
-                    Builder.AddField($"Version {pair.Key}", pair.Value);
+                throw new ArgumentException($"A version called {version} does not exist.");
             }
 
+            Builder.Description = "Showing specified version.";
+            Builder.AddField($"Version {version}", Consts.VERSION_INFO[version]);
+
             await ctx.RespondAsync(embed: Builder.Build());
+        }
+
+        [Command("changelog")]
+        public async Task Changelog(CommandContext ctx)
+        {
+            DiscordEmbedBuilder Builder = new DiscordEmbedBuilder()
+            {
+                Color = new DiscordColor(Consts.EMBED_COLOUR),
+                Title = "🕒 $changelog",
+                Description = "Showing latest 3 versions."
+            };
+
+            foreach (var pair in Consts.VERSION_INFO.Take(3))
+                Builder.AddField($"Version {pair.Key}", pair.Value);
+
+            await ctx.RespondAsync(embed: Builder.Build());
+
         }
     }
 }

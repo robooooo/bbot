@@ -11,14 +11,14 @@ namespace BBotCore
     public class Program
     {
         static DiscordClient Discord;
-        static CommandsNextModule Commands;
-        static InteractivityModule Interactivity;
+        static CommandsNextExtension Commands;
+        static InteractivityExtension Interactivity;
 
         public static void Main(string[] args)
         {
             // Initialise with bot token
-            // string Token = Environment.GetEnvironmentVariable("DISCORD_BETA_TOKEN");
-            string Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
+            string Token = Environment.GetEnvironmentVariable("DISCORD_BETA_TOKEN");
+            // string Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
             Discord = new DiscordClient(new DiscordConfiguration
             {
                 Token = Token,
@@ -34,7 +34,7 @@ namespace BBotCore
             Commands = Discord.UseCommandsNext(new CommandsNextConfiguration
             {
                 CaseSensitive = false,
-                StringPrefix = "$",
+                StringPrefixes = new String[] { "$" },
                 EnableDefaultHelp = true,
                 EnableDms = false,
                 EnableMentionPrefix = true,
@@ -47,7 +47,7 @@ namespace BBotCore
 
             Discord.Ready += async (e) =>
             {
-                await Discord.UpdateStatusAsync(new DiscordGame("$changelog 4.2.0"));
+                await Discord.UpdateStatusAsync(new DiscordActivity("$changelog 4.3.0", ActivityType.Watching));
             };
 
             Commands.CommandErrored += Events.CommandErrored;

@@ -54,10 +54,10 @@ namespace BBotCore
 
             // We want to wait a bit so that we don't trigger from our own reaction
             await Task.Delay(1500);
-            var Interact = ctx.Client.GetInteractivityModule();
+            var Interact = ctx.Client.GetInteractivity();
             var Result = await Interact.WaitForReactionAsync(e => true, timeoutoverride: TimeSpan.FromSeconds(60));
 
-            if (Result != null)
+            if (!Result.TimedOut)
             {
                 DiscordEmbedBuilder EditedBuilder = new DiscordEmbedBuilder
                 {
