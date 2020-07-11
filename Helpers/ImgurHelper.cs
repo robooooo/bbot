@@ -1,10 +1,15 @@
 using System;
 using System.Linq;
 using System.Text;
+using System.Net;
+using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
-using ImgurSharp;
+using Imgur.API.Authentication.Impl;
+using Imgur.API.Endpoints.Impl;
+using Imgur.API;
+
 
 namespace BBotCore
 {
@@ -12,11 +17,13 @@ namespace BBotCore
     // Provides caching and upload
     public class ImgurHelper
     {
-        private Imgur ImgurClient;
+        private ImgurClient Client;
+        private ImageEndpoint Endpoint;
         private Dictionary<ulong, string> Cache = new Dictionary<ulong, string>();
-        public ImgurHelper(Imgur client)
+        public ImgurHelper(ImgurClient client)
         {
-            ImgurClient = client;
+            Client = client;
+            Endpoint = new ImageEndpoint(client);
         }
 
         public async Task<string> GetURLFromUser(DiscordUser user)
@@ -25,18 +32,16 @@ namespace BBotCore
             if (Cache.ContainsKey(user.Id))
                 return Cache[user.Id];
 
-            // Else add to cache and return
-            string URL = await Upload(user.AvatarUrl);
-            Cache[user.Id] = URL;
-            return URL;
+            string Url = await Upload(user.AvatarUrl);
+            Cache[user.Id] = Url;
+            return Url;
         }
 
-        private async Task<string> Upload(string ProfileURL)
+        private async Task<string> Upload(string profileUrl)
         {
-            // Provide as little information as possible 
-            ImgurImage img = await ImgurClient.UploadImageAnonymous(ProfileURL, "", "", "");
-            return img.Link;
-        }
 
+            var image = await Endpoint.UploadImageUrlAsync(profileUrl);
+            return image.Link;
+        }
     }
 }

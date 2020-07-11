@@ -1,7 +1,7 @@
 ﻿using System;
 using Google.Apis.Customsearch.v1;
 using Google.Apis.Services;
-using ImgurSharp;
+using Imgur.API.Authentication.Impl;
 using DSharpPlus.CommandsNext;
 
 namespace BBotCore
@@ -17,7 +17,7 @@ namespace BBotCore
 
         // As of now, the client is put here (as opposed to the helper) so that too large of a cache is not kept.
         // If the bot is put on a more powerful device, or a more intelligent cache is implemented, this may change?
-        public static Imgur ImgurClient { get; private set; } = new Imgur(Environment.GetEnvironmentVariable("IMGUR_TOKEN"));
+        public static ImgurClient ImgurClient { get; private set; } = new ImgurClient(Environment.GetEnvironmentVariable("IMGUR_TOKEN"));
 
         public static SearchHelper SearchHelper { get; private set; } = new SearchHelper(CSS);
 

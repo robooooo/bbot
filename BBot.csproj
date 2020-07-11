@@ -10,7 +10,7 @@
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly" />
     <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.41.1.1369" />
-    <PackageReference Include="ImgurSharp" Version="1.0.0" />
+    <PackageReference Include="Imgur.Api" Version="4.0.1" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.5" />
   </ItemGroup>
 

@@ -9,6 +9,13 @@ namespace BBotCore
         public static Dictionary<string, string> VERSION_INFO = new Dictionary<string, string>()
             {
                 {
+                    "4.3.1",
+
+                    "- Fixed a bug where backup-related commands would sporadically fail.\n" +
+                    "- Fixed a related bug where icons in the backup command would stop working if users changed their avatars.\n" +
+                    "- Fixed a bug where some search results would be malformatted."
+                },
+                {
                     "4.3.0",
 
                     " - Updated the internal framework that BBot uses, allowing for more features to be added.\n" +
@@ -77,7 +84,7 @@ namespace BBotCore
                 {
                     "4.0.0",
 
-                    "**Fourth re-write of BBot!**\n" +
+                    "**Fourth re-write of bbot!**\n" +
                     "**BBot is now hosted**, for a (hopefully) permanent uptime.\n" +
                     "- Added the `$changelog` command.\n" +
                     "- Changed the `$search` provider from DuckDuckGo to Google.\n" +
@@ -89,7 +96,7 @@ namespace BBotCore
                 {
                     "3.0.0",
 
-                    "Previous version of BBot."
+                    "Previous version of bbot."
                 },
             };
     }

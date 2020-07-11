@@ -26,7 +26,8 @@ namespace BBotCore
             var CSE = CSS.Cse.List(query);
             CSE.Cx = GetSearchCX();
             var Results = await CSE.ExecuteAsync();
-            return Results.Items.Take(results).Select(r => r.FormattedUrl).ToList();
+            // Careful: Use r.Link here as other formats may not embed properly into discord.
+            return Results.Items.Take(results).Select(r => r.Link).ToList();
         }
 
         private string GetSearchCX() => Environment.GetEnvironmentVariable("SEARCH_CX");

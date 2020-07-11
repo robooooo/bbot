@@ -26,7 +26,7 @@ namespace BBotCore
             Exception ex = e.Exception;
             while (ex != null)
             {
-                Builder.AddField("Reason:", e.Exception.Message);
+                Builder.AddField("Reason", e.Exception.Message);
                 ex = ex.InnerException;
             }
             // Builder.AddField("Stack Trace:", $"```{e.Exception.StackTrace}```");
