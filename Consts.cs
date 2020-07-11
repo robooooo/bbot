@@ -13,7 +13,8 @@ namespace BBotCore
 
                     "- Fixed a bug where backup-related commands would sporadically fail.\n" +
                     "- Fixed a related bug where icons in the backup command would stop working if users changed their avatars.\n" +
-                    "- Fixed a bug where some search results would be malformatted."
+                    "- Fixed a bug where some search results would be malformatted.\n" +
+                    "- Fixed an issue the version number in bbot's status would often be incorrect."
                 },
                 {
                     "4.3.0",

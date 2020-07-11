@@ -5,6 +5,7 @@ using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
 using Microsoft.Data.Sqlite;
+using System.Linq;
 
 namespace BBotCore
 {
@@ -47,7 +48,8 @@ namespace BBotCore
 
             Discord.Ready += async (e) =>
             {
-                await Discord.UpdateStatusAsync(new DiscordActivity("$changelog 4.3.0", ActivityType.Watching));
+                string LatestVersion = Consts.VERSION_INFO.First().Key;
+                await Discord.UpdateStatusAsync(new DiscordActivity($"$changelog {LatestVersion}", ActivityType.Watching));
             };
 
             Commands.CommandErrored += Events.CommandErrored;
