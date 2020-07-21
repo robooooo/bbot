@@ -12,6 +12,8 @@ namespace BBotCore
 {
     public static class Events
     {
+        private static int heartbeats = 0;
+        private static int statusIndex = 0;
         // Callback from errored command
         // Is used to display error messages
         public static async Task CommandErrored(CommandErrorEventArgs e)
@@ -94,6 +96,22 @@ namespace BBotCore
                 };
                 Builder.AddField("Reason:", ex.Message);
                 await e.Channel.SendMessageAsync(embed: Builder.Build());
+            }
+        }
+
+        // Using heartbeats as a timer to trigger status changes (hacky!)
+        // Heartbeats are sent at around a 40-second interval
+        // So 15 heartbeats are around 10 minutes
+        public static async Task HeartbeatTimer(HeartbeatEventArgs e)
+        {
+            heartbeats = (heartbeats + 1) % (Consts.BEATS_BETWEEN_STATUSES);
+            if (heartbeats == 0)
+            {
+                statusIndex = (statusIndex + 1) % Consts.STATUS_MESSAGES.Length;
+                string newStatus = Consts.STATUS_MESSAGES[statusIndex]
+                    .Replace("LATEST_VERSION", $"{Consts.VERSION_INFO.First().Key}")
+                    .Replace("GUILDS_JOINED", $"{e.Client.Guilds.Count()}");
+                await e.Client.UpdateStatusAsync(new DiscordActivity(newStatus, ActivityType.Playing));
             }
         }
     }

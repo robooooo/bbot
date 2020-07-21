@@ -37,6 +37,9 @@ namespace BBotCore
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "❓ $help",
+                Footer = new DiscordEmbedBuilder.EmbedFooter() {
+                    Text = "Also try `$about` for bbot-related information and links."
+                }
             };
         }
 
@@ -80,7 +83,8 @@ namespace BBotCore
                     Builder.AddField(
                         FirstLetterToUpper(cmd.Name),
                         $"{FirstLetterToUpper(cmd.Description)}.",
-                        inline: false);
+                        inline: false
+                    );
                 }
             }
 

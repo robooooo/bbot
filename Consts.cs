@@ -6,8 +6,31 @@ namespace BBotCore
     {
         public static int EMBED_COLOUR = 0xFFC800;
 
+        public static int BEATS_BETWEEN_STATUSES = 15;
+
+        // I was wanting to have these links to upvote pages as statuses.
+        // However, since bots do not allow custom statuses, the text is not copyable.
+        // That means there's not much point in having them.
+        public static string[] STATUS_MESSAGES = new string[] {
+            "$changelog LATEST_VERSION",
+            "$about",
+            // "$help",
+            "In GUILDS_JOINED guilds",
+            // "top.gg/bot/362666654452416524/vote",
+            // "discordbotlist.com/bots/bbot/upvote",
+            // "bots.ondiscord.xyz/bots/362666654452416524/review",
+        };
+
         public static Dictionary<string, string> VERSION_INFO = new Dictionary<string, string>()
             {
+                {
+                    "4.3.2",
+
+                    "- Added an `$about` command for bbot-related links.\n" +
+                    "- We've been approved on several bot-listing websites!\n" +
+                    "- Feel free to upvote bbot on one of discord's many bot lists!\n" +
+                    "- Added rotating status messages, including a guild count."
+                },
                 {
                     "4.3.1",
 

@@ -31,7 +31,7 @@ namespace BBotCore
                 // However, we'll try it for now
                 AutoReconnect = true,
             });
-
+            
             Commands = Discord.UseCommandsNext(new CommandsNextConfiguration
             {
                 CaseSensitive = false,
@@ -49,12 +49,13 @@ namespace BBotCore
             Discord.Ready += async (e) =>
             {
                 string LatestVersion = Consts.VERSION_INFO.First().Key;
-                await Discord.UpdateStatusAsync(new DiscordActivity($"$changelog {LatestVersion}", ActivityType.Watching));
+                await Discord.UpdateStatusAsync(new DiscordActivity($"$changelog {LatestVersion}", ActivityType.Playing));
             };
 
             Commands.CommandErrored += Events.CommandErrored;
             Discord.MessageReactionAdded += Events.MessageReactionAdded;
             Discord.ChannelPinsUpdated += Events.ChannelPinsUpdated;
+            Discord.Heartbeated += Events.HeartbeatTimer;
 
             Commands.RegisterCommands<Commands>();
             Commands.SetHelpFormatter<HelpFormatter>();
