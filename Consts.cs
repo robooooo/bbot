@@ -24,6 +24,12 @@ namespace BBotCore
         public static Dictionary<string, string> VERSION_INFO = new Dictionary<string, string>()
             {
                 {
+                    "4.3.3",
+
+                    "- Updated the `$backup` command to handle file formats unsupported by discord in a cleaner manner\n" +
+                    "- Thumbnail support for `.mp4` videos in the `$backup` command is not included with this update, but is on the radar."
+                },
+                {
                     "4.3.2",
 
                     "- Added an `$about` command for bbot-related links.\n" +

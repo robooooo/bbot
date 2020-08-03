@@ -30,7 +30,6 @@ namespace BBotCore
             {
                 // Create a link pointing to the original message which can be visited
                 // We put it in the header (author) to avoid spam
-                string Link = $"https://discordapp.com/channels/{pin.Channel.GuildId}/{pin.ChannelId}/{pin.Id}";
 
                 // Move all this information into a postable embed
                 DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
@@ -41,7 +40,7 @@ namespace BBotCore
                     {
                         Name = pin.Author.Username,
                         IconUrl = await Imgur.GetURLFromUser(pin.Author),
-                        Url = Link,
+                        Url = pin.JumpLink.ToString(),
                     },
                     Footer = new DiscordEmbedBuilder.EmbedFooter()
                     {
@@ -50,20 +49,26 @@ namespace BBotCore
                 };
 
                 string ImageUrl = GetImageURLFromMessage(pin);
-                if (ImageUrl != null)
-                    Builder.ImageUrl = ImageUrl;
-
                 // There are still some cases this command can't handle, e.g. videos
                 // This is a contingency for this one case - we can link directly to the video
                 bool IsKnownImageExtension =
-                    new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif" }
+                    new string[] { ".jpg", ".jpeg", ".png", ".bmp" }
                     .Any(ext => ImageUrl?.EndsWith(ext) ?? false);
+                // bool IsKnownVideoExtension =
+                //     new string[] { ".mp4", ".m4a" }
+                //     .Any(ext => ImageUrl?.EndsWith(ext) ?? false);
 
-                // Include link iff we're dealing with a link, but the format isn't an image
+                if (ImageUrl != null)
+                    Builder.ImageUrl = ImageUrl;
+
+                // Include link to OP iff we're dealing with a file, but the format isn't an image that can be embedded
                 if (!IsKnownImageExtension && ImageUrl != null)
-                    await dst.SendMessageAsync(content: Link, embed: Builder.Build());
-                else
-                    await dst.SendMessageAsync(embed: Builder.Build());
+                    Builder.AddField(
+                        "A file included in this message could not be displayed properly.",
+                        $"You can view the original post by clicking on the author's name above, or by clicking [this]({pin.JumpLink}) link."
+                    );
+
+                await dst.SendMessageAsync(embed: Builder.Build());
 
                 await pin.UnpinAsync();
             }
@@ -90,7 +95,7 @@ namespace BBotCore
                 else if (!String.IsNullOrWhiteSpace(ImageURL))
                     return ImageURL;
             }
-            // Or as a file (but we do this last, since it may be a file)
+            // Or as a file (but we do this last, since it may be a non-image file)
             foreach (var attachment in msg.Attachments)
                 if (attachment.FileSize > 0)
                     return attachment.Url;
