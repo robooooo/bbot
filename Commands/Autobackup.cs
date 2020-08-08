@@ -28,7 +28,7 @@ namespace BBotCore
                     throw new Exception("You do not have permission to manage pins in the current channel.");
             }
 
-            await DatabaseHelper.SetAutobackupDestination(ctx.Channel.Id, destination.Id);
+            await Services.DatabaseHelper.SetAutobackupDestination(ctx.Channel.Id, destination.Id);
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {
@@ -52,7 +52,7 @@ namespace BBotCore
                     throw new Exception("You do not have permission to manage pins in the current channel.");
             }
 
-            await DatabaseHelper.ClearAutobackupDestination(ctx.Channel.Id);
+            await Services.DatabaseHelper.ClearAutobackupDestination(ctx.Channel.Id);
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {

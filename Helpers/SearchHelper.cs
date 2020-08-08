@@ -16,9 +16,9 @@ namespace BBotCore
             CSS = css;
         }
 
-        public async Task<List<String>> AsyncSearchFor(string query) {
+        public async Task<List<String>> AsyncSearchFor(string query, int results = 10) {
             // TODO: Implement web scraping approach
-            return await AsyncCustomSearch(query);
+            return await AsyncCustomSearch(query, results);
         }
 
         // Legacy approach using google's custom search service to search w/ no website specific

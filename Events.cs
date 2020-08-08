@@ -12,8 +12,8 @@ namespace BBotCore
 {
     public static class Events
     {
-        private static int heartbeats = 0;
-        private static int statusIndex = 0;
+        private static int Heartbeats = 0;
+        private static int StatusIndex = 0;
         // Callback from errored command
         // Is used to display error messages
         public static async Task CommandErrored(CommandErrorEventArgs e)
@@ -47,7 +47,7 @@ namespace BBotCore
 
             try
             {
-                uint? MaybeThreshhold = await Commands.DatabaseHelper.GetAutopinLimit(e.Channel.Id);
+                uint? MaybeThreshhold = await Services.DatabaseHelper.GetAutopinLimit(e.Channel.Id);
                 if (MaybeThreshhold is uint Threshhold)
                 {
                     int PinReacts = e.Message.Reactions.Where(r => r.Emoji.Equals(PinEmoji)).First().Count;
@@ -78,11 +78,11 @@ namespace BBotCore
                 // Trigger autobackup iff over 45 pins: sane limit with some leeway in case a few are missed.
                 if (Pins.Count >= 45)
                 {
-                    ulong? MaybeDestId = await Commands.DatabaseHelper.GetAutobackupDestination(e.Channel.Id);
+                    ulong? MaybeDestId = await Services.DatabaseHelper.GetAutobackupDestination(e.Channel.Id);
                     if (MaybeDestId is ulong destId)
                     {
                         DiscordChannel destination = e.Channel.Guild.GetChannel(destId);
-                        await Commands.BackupHelper.DoBackup(e.Channel, destination);
+                        await Services.BackupHelper.DoBackup(e.Channel, destination);
                     }
                 }
             }
@@ -104,13 +104,18 @@ namespace BBotCore
         // So 15 heartbeats are around 10 minutes
         public static async Task HeartbeatTimer(HeartbeatEventArgs e)
         {
-            heartbeats = (heartbeats + 1) % (Consts.BEATS_BETWEEN_STATUSES);
-            if (heartbeats == 0)
+            Heartbeats = (Heartbeats + 1) % (Consts.BEATS_BETWEEN_STATUSES);
+            if (Heartbeats == 0)
             {
-                statusIndex = (statusIndex + 1) % Consts.STATUS_MESSAGES.Length;
-                string newStatus = Consts.STATUS_MESSAGES[statusIndex]
+                // This runs synchronously, so let's only do it so often
+                int guilds = e.Client.Guilds.Count();
+                if (guilds > 0)
+                    Services.GuildsHelper.UpdateGuildsAsync(e.Client.CurrentUser.Id, guilds);
+
+                StatusIndex = (StatusIndex + 1) % Consts.STATUS_MESSAGES.Length;
+                string newStatus = Consts.STATUS_MESSAGES[StatusIndex]
                     .Replace("LATEST_VERSION", $"{Consts.VERSION_INFO.First().Key}")
-                    .Replace("GUILDS_JOINED", $"{e.Client.Guilds.Count()}");
+                    .Replace("GUILDS_JOINED", $"{guilds}");
                 await e.Client.UpdateStatusAsync(new DiscordActivity(newStatus, ActivityType.Playing));
             }
         }

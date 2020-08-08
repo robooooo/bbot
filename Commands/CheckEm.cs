@@ -26,7 +26,7 @@ namespace BBotCore
             Value = Ind + 2;
 
             // The range is from [0, 10^n) as RNG.Next excludes the upper bound
-            int Result = RNG.Next(0, (int)Math.Pow(10, Value));
+            int Result = Services.RNG.Next(0, (int)Math.Pow(10, Value));
             string Out = Result.ToString().PadLeft(Value, '0');
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder

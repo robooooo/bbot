@@ -16,7 +16,7 @@ namespace BBotCore
         public async Task DoBackup(DiscordChannel src, DiscordChannel dst)
         {
             var Pins = await src.GetPinnedMessagesAsync();
-            var Imgur = new ImgurHelper(Commands.ImgurClient);
+            var Imgur = new ImgurHelper(Services.ImgurClient);
 
             await src.SendMessageAsync(embed: new DiscordEmbedBuilder
             {

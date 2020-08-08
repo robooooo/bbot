@@ -28,7 +28,7 @@ namespace BBotCore
             if (limit == 0)
                 throw new ArgumentException("The reaction threshold for this command cannot be zero.");
 
-            await DatabaseHelper.SetAutopinLimit(ctx.Channel.Id, limit);
+            await Services.DatabaseHelper.SetAutopinLimit(ctx.Channel.Id, limit);
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {
@@ -54,7 +54,7 @@ namespace BBotCore
                     throw new Exception("You do not have permission to manage pins in the current channel.");
             }
 
-            await DatabaseHelper.SetAutopinLimit(ctx.Channel.Id, 0);
+            await Services.DatabaseHelper.SetAutopinLimit(ctx.Channel.Id, 0);
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {

@@ -24,9 +24,15 @@ namespace BBotCore
         public static Dictionary<string, string> VERSION_INFO = new Dictionary<string, string>()
             {
                 {
+                    "4.3.4",
+
+                    "- Added the ability for bbot to update guild-count statistics on various bot-listing websites.\n" +
+                    "- Minor internal tweaks involving bbot's internal usage of various APIs."
+                },
+                {
                     "4.3.3",
 
-                    "- Updated the `$backup` command to handle file formats unsupported by discord in a cleaner manner\n" +
+                    "- Updated the `$backup` command to handle file formats unsupported by discord in a cleaner manner.\n" +
                     "- Thumbnail support for `.mp4` videos in the `$backup` command is not included with this update, but is on the radar."
                 },
                 {
@@ -53,7 +59,7 @@ namespace BBotCore
                     " - Updated the `$autopin` and `$autobackup` commands; now both of these features can be disabled by providing no arguments.\n" +
                     " - Due to this, the `$noautobackup` command has been removed.\n" +
                     " - Additionally, the `$random` command has been removed.\n" +
-                    " - Fixed an issue where disabling auto-backups in a channel did not require the manage messages permission." + 
+                    " - Fixed an issue where disabling auto-backups in a channel did not require the manage messages permission." +
                     " - Updated the wording in many commands to fix inconsistencies and bugs."
                 },
                 {

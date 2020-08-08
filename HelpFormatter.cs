@@ -76,7 +76,7 @@ namespace BBotCore
                 // But want to change the description provided by it
                 if (cmd.Name.Equals("help"))
                 {
-                    Builder.AddField("Help", "Lists all commands or display help for a certain command.", inline: false);
+                    Builder.AddField("Help", "Lists all commands or displays help for a certain command.", inline: false);
                 }
                 else
                 {

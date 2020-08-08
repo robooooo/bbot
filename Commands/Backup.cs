@@ -31,7 +31,7 @@ namespace BBotCore
                     throw new Exception("You do not have permission to manage pins in the current channel.");
             }
 
-            await BackupHelper.DoBackup(ctx.Channel, destination);
+            await Services.BackupHelper.DoBackup(ctx.Channel, destination);
         }
     }
 }

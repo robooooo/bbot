@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System;
+using System.Linq;
 using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -24,9 +25,8 @@ namespace BBotCore
                 Query = $"site:www.scp-wiki.net {page}";
 
 
-            var CSE = CSS.Cse.List(Query);
-            CSE.Cx = Environment.GetEnvironmentVariable("SEARCH_CX");
-            var Search = await CSE.ExecuteAsync();
+            SearchHelper Search = Services.SearchHelper;
+            string Result = (await Search.AsyncSearchFor(Query, 1)).First();
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {
@@ -34,7 +34,7 @@ namespace BBotCore
                 Title = "🕵️ $scp",
                 // Description = $"Access authorized.",
             };
-            Builder.AddField("Result", Search.Items[0].Link);
+            Builder.AddField("Result", Result);
 
             await ctx.RespondAsync(embed: Builder.Build());
         }
