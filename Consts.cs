@@ -24,6 +24,12 @@ namespace BBotCore
         public static Dictionary<string, string> VERSION_INFO = new Dictionary<string, string>()
             {
                 {
+                    "4.3.5",
+
+                    "- Fixed bbot thinking it didn't recognise the `.gif` filetype in backups, even though it does.\n" +
+                    "- Internal progress towards being able to move backups between channels."
+                },
+                {
                     "4.3.4",
 
                     "- Added the ability for bbot to update guild-count statistics on various bot-listing websites.\n" +

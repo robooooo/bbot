@@ -30,13 +30,12 @@ namespace BBotCore
 
         public void UpdateGuildsAsync(ulong id, int guildsCount)
         {
-            id = 362666654452416524;
             try
             {   
                 // Client.Headers[HttpRequestHeader.ContentType] = "application/json";
 
-
-                // WebClient does not support concurrent I/O, loop while we're not done to prevent erroring :/
+                // Not using asynchronous methods because no proper support for async in the WebClient.
+                // Cannot start uploading second set of values until first is done.
                 NameValueCollection values = new NameValueCollection() {{"server_count", $"{guildsCount}"}};
                 Client.Headers[HttpRequestHeader.Host] = "top.gg";
                 Client.Headers[HttpRequestHeader.Authorization] = TopGG;

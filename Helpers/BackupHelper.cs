@@ -52,7 +52,7 @@ namespace BBotCore
                 // There are still some cases this command can't handle, e.g. videos
                 // This is a contingency for this one case - we can link directly to the video
                 bool IsKnownImageExtension =
-                    new string[] { ".jpg", ".jpeg", ".png", ".bmp" }
+                    new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif" }
                     .Any(ext => ImageUrl?.EndsWith(ext) ?? false);
                 // bool IsKnownVideoExtension =
                 //     new string[] { ".mp4", ".m4a" }
@@ -79,6 +79,19 @@ namespace BBotCore
                 Title = "💾 $backup",
                 Description = $"Backup finished successfully.",
             });
+        }
+
+        // Move all bbot-pinned messages 
+        public async Task DoMove(DiscordChannel src, DiscordChannel dst)
+        {
+            foreach (var m in (await src.GetMessagesAsync(limit: 300)).Reverse())
+            {   
+                if (m.Author.Username != "bbot")
+                    return;
+                
+                var Embed = m.Embeds.First();
+                await dst.SendMessageAsync(embed: Embed);
+            }
         }
 
         // Used above to decide which URL, if any, is used as the single image from several sources
