@@ -27,7 +27,8 @@ namespace BBotCore
                     "4.3.5",
 
                     "- Fixed bbot thinking it didn't recognise the `.gif` filetype in backups, even though it does.\n" +
-                    "- Internal progress towards being able to move backups between channels."
+                    "- Fixed bbot thinking it didn't recognise images with certain URLs, even though it does.\n" +
+                    "- Fixed bbot ignoring many images/files in a post, now it will link back to the original post."
                 },
                 {
                     "4.3.4",

@@ -48,12 +48,12 @@ namespace BBotCore
                     },
                 };
 
-                string ImageUrl = GetImageURLFromMessage(pin);
+                string ImageUrl = GetImageUrlFromMessage(pin);
                 // There are still some cases this command can't handle, e.g. videos
                 // This is a contingency for this one case - we can link directly to the video
                 bool IsKnownImageExtension =
                     new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif" }
-                    .Any(ext => ImageUrl?.EndsWith(ext) ?? false);
+                    .Any(ext => ImageUrl?.Contains(ext) ?? false);
                 // bool IsKnownVideoExtension =
                 //     new string[] { ".mp4", ".m4a" }
                 //     .Any(ext => ImageUrl?.EndsWith(ext) ?? false);
@@ -62,7 +62,10 @@ namespace BBotCore
                     Builder.ImageUrl = ImageUrl;
 
                 // Include link to OP iff we're dealing with a file, but the format isn't an image that can be embedded
-                if (!IsKnownImageExtension && ImageUrl != null)
+                bool HasImproperDisplay = false;
+                HasImproperDisplay |= !IsKnownImageExtension && ImageUrl != null;
+                HasImproperDisplay |= HasDuplicateUrls(pin);
+                if (HasImproperDisplay)
                     Builder.AddField(
                         "A file included in this message could not be displayed properly.",
                         $"You can view the original post by clicking on the author's name above, or by clicking [this]({pin.JumpLink}) link."
@@ -95,7 +98,7 @@ namespace BBotCore
         }
 
         // Used above to decide which URL, if any, is used as the single image from several sources
-        private static string GetImageURLFromMessage(DiscordMessage msg)
+        private static string GetImageUrlFromMessage(DiscordMessage msg)
         {
             // Images can be uploaded inside embeds (like a yt thumbnail)...
             foreach (var embed in msg.Embeds)
@@ -114,6 +117,26 @@ namespace BBotCore
                     return attachment.Url;
             // We don't have anything that could possibly be a thumbnail
             return null;
+        }
+
+        private static bool HasDuplicateUrls(DiscordMessage msg)
+        {
+            int res = 0;
+            // Images can be uploaded inside embeds (like a yt thumbnail)...
+            foreach (var embed in msg.Embeds)
+            {
+                string ThumbnailURL = embed.Thumbnail?.Url?.ToString();
+                string ImageURL = embed.Image?.Url?.ToString();
+
+                if (!String.IsNullOrWhiteSpace(ThumbnailURL))
+                    res += 1;
+                if (!String.IsNullOrWhiteSpace(ImageURL))
+                    res += 1;
+            }
+            // Or as a file (but we do this last, since it may be a non-image file)
+            res += msg.Attachments.Where(a => a.FileSize > 0).Count();
+            // We don't have anything that could possibly be a thumbnail
+            return res >= 2;
         }
 
         // Used above to decide the content of the message from several sources

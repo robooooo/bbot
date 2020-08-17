@@ -26,8 +26,8 @@ namespace BBotCore
                 }
             };
 
-            string Links = "https://discord.bots.gg/bots/362666654452416524\n" +
-                "https://top.gg/bot/362666654452416524\n" +
+            string Links = "https://top.gg/bot/362666654452416524\n" +
+                "https://discord.bots.gg/bots/362666654452416524\n" +
                 "https://discordbotlist.com/bots/bbot\n" + 
                 "https://bots.ondiscord.xyz/bots/362666654452416524";
 
