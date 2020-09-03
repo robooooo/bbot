@@ -23,8 +23,12 @@ namespace BBotCore
 
         // Legacy approach using google's custom search service to search w/ no website specific
         private async Task<List<String>> AsyncCustomSearch(string query, int results = 10) {
-            var CSE = CSS.Cse.List(query);
+            var CSE = CSS.Cse.List(query); 
             CSE.Cx = GetSearchCX();
+            // Enable safesearch, which is neccesary to comply with discord ToS
+            // Alternative is to limit $s to NSFW channels which is not neccessary
+            // Could disable this in NSFW channels, but who is using that feature anyway?
+            CSE.Safe = CseResource.ListRequest.SafeEnum.Active;
             var Results = await CSE.ExecuteAsync();
             // Careful: Use r.Link here as other formats may not embed properly into discord.
             return Results.Items.Take(results).Select(r => r.Link).ToList();
@@ -32,4 +36,4 @@ namespace BBotCore
 
         private string GetSearchCX() => Environment.GetEnvironmentVariable("SEARCH_CX");
     }
-}
+}   

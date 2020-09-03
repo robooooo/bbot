@@ -28,7 +28,10 @@ namespace BBotCore
             Exception ex = e.Exception;
             while (ex != null)
             {
-                Builder.AddField("Reason", e.Exception.Message);
+                if (e.Exception.Message == "One or more pre-execution checks failed.")
+                    Builder.AddField("Reason", "You lack the required permissions to run this command here.");
+                else
+                    Builder.AddField("Reason", e.Exception.Message);
                 ex = ex.InnerException;
             }
             // Builder.AddField("Stack Trace:", $"```{e.Exception.StackTrace}```");
@@ -47,7 +50,8 @@ namespace BBotCore
 
             try
             {
-                uint? MaybeThreshhold = await Services.DatabaseHelper.GetAutopinLimit(e.Channel.Id);
+                // uint? MaybeThreshhold = await Services.DatabaseHelper.GetAutopinLimit(e.Channel.Id);
+                uint? MaybeThreshhold = Services.DatabaseHelper.Channels.Get(e.Channel.Id).AutopinLimit;
                 if (MaybeThreshhold is uint Threshhold)
                 {
                     int PinReacts = e.Message.Reactions.Where(r => r.Emoji.Equals(PinEmoji)).First().Count;
@@ -76,9 +80,10 @@ namespace BBotCore
             try
             {
                 // Trigger autobackup iff over 45 pins: sane limit with some leeway in case a few are missed.
-                if (Pins.Count >= 45)
+                if (Pins.Count >= Consts.AUTOBACKUP_THRESHOLD)
                 {
-                    ulong? MaybeDestId = await Services.DatabaseHelper.GetAutobackupDestination(e.Channel.Id);
+                    // ulong? MaybeDestId = await Services.DatabaseHelper.GetAutobackupDestination(e.Channel.Id);
+                    ulong? MaybeDestId = Services.DatabaseHelper.Channels.Get(e.Channel.Id).AutobackupDest;
                     if (MaybeDestId is ulong destId)
                     {
                         DiscordChannel destination = e.Channel.Guild.GetChannel(destId);

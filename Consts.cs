@@ -8,6 +8,8 @@ namespace BBotCore
 
         public static int BEATS_BETWEEN_STATUSES = 15;
 
+        public static int AUTOBACKUP_THRESHOLD = 2;
+
         // I was wanting to have these links to upvote pages as statuses.
         // However, since bots do not allow custom statuses, the text is not copyable.
         // That means there's not much point in having them.
@@ -23,6 +25,16 @@ namespace BBotCore
 
         public static Dictionary<string, string> VERSION_INFO = new Dictionary<string, string>()
             {
+                {
+                    "4.4.0",
+
+                    " - Changed bbot's internal database and related APIs to a more extensible format."
+                },
+                {
+                    "4.3.6",
+
+                    "- Amended the `$search` function to respect discord's terms of service with respect to NSFW content."
+                },
                 {
                     "4.3.5",
 

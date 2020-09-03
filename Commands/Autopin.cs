@@ -13,22 +13,16 @@ namespace BBotCore
     {
         [Command("autopin")]
         [Description("configures automatically pinning messages when they accumulate a large number of 📌 reactions")]
+        [RequireUserPermissions(Permissions.ManageMessages)]
         public async Task Autopin(CommandContext ctx,
             [Description("number of 📌 reactions that must be reached for the message to be pinned, but can be omitted to disable the feature instead")] uint limit
         )
         {
-            Permissions UserPerms = ctx.Channel.PermissionsFor(ctx.Member);
-            // Apply permission checks only to non-admins
-            if (!UserPerms.HasPermission(Permissions.Administrator) && !ctx.Member.IsOwner)
-            {
-                if (!UserPerms.HasPermission(Permissions.ManageMessages))
-                    throw new Exception("You do not have permission to manage pins in the current channel.");
-            }
-
             if (limit == 0)
                 throw new ArgumentException("The reaction threshold for this command cannot be zero.");
 
-            await Services.DatabaseHelper.SetAutopinLimit(ctx.Channel.Id, limit);
+            // await Services.DatabaseHelper.SetAutopinLimit(ctx.Channel.Id, limit);
+            Services.DatabaseHelper.Channels.Update(ctx.Channel.Id, dat => dat.AutopinLimit = limit);
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {
@@ -40,21 +34,14 @@ namespace BBotCore
             Builder.AddField(name: "Configuration", value: $"Messages in this channel will be pinned when they reach **{limit}** pushpin reactions.");
             Builder.AddField(name: "Info", value: $"This feature can be disabled by typing only `$autopin` with no arguments.");
             Builder.AddField(name: "Info", value: $"If you haven't already, consider setting up the `$autobackup` command so messages can be pinned by bbot if needed.");
-            await ctx.RespondAsync(embed: Builder.Build());
+            await ctx.RespondAsync(embed: Builder);
         }
 
         [Command("autopin")]
         public async Task Autopin(CommandContext ctx)
         {
-            Permissions UserPerms = ctx.Channel.PermissionsFor(ctx.Member);
-            // Apply permission checks only to non-admins
-            if (!UserPerms.HasPermission(Permissions.Administrator) && !ctx.Member.IsOwner)
-            {
-                if (!UserPerms.HasPermission(Permissions.ManageMessages))
-                    throw new Exception("You do not have permission to manage pins in the current channel.");
-            }
-
-            await Services.DatabaseHelper.SetAutopinLimit(ctx.Channel.Id, 0);
+            // await Services.DatabaseHelper.SetAutopinLimit(ctx.Channel.Id, 0);
+            Services.DatabaseHelper.Channels.Update(ctx.Channel.Id, dat => dat.AutopinLimit = 0);
 
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {

@@ -20,9 +20,9 @@ namespace BBotCore
             // We limit our search to the scp-wiki site
             // And format numerica SCPs, padding left with 0s to length 3
             if (int.TryParse(page, out int num))
-                Query = $"site:www.scp-wiki.net {page.PadLeft(3, '0')}";
+                Query = $"site:www.scpwiki.com {page.PadLeft(3, '0')}";
             else
-                Query = $"site:www.scp-wiki.net {page}";
+                Query = $"site:www.scpwiki.com {page}";
 
 
             SearchHelper Search = Services.SearchHelper;

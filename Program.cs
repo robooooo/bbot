@@ -7,6 +7,22 @@ using DSharpPlus.Interactivity;
 using Microsoft.Data.Sqlite;
 using System.Linq;
 
+// TODO:
+// [ ] SEO on bot listing pages
+// [+] Switch to new db backend
+// [ ] Async for litedb
+// [+] Set prefix handler
+// [ ] Set prefix command
+// [ ] Command framework for replies
+// [ ] Command framework for missing arguments
+// [ ] Setup dialog
+// [ ] Pagination on search
+// [ ] Fix search expansion bug
+// [ ] Pagination on changelog
+// [+] Change permission checks to use attributes
+// [ ] Rework permissions/structure in backup funcs
+// [ ] Pin archive/backup to file functionality
+
 namespace BBotCore
 {
     public class Program
@@ -18,8 +34,8 @@ namespace BBotCore
         public static void Main(string[] args)
         {
             // Initialise with bot token
-            // string Token = Environment.GetEnvironmentVariable("DISCORD_BETA_TOKEN");
-            string Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
+            string Token = Environment.GetEnvironmentVariable("DISCORD_BETA_TOKEN");
+            // string Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
             Discord = new DiscordClient(new DiscordConfiguration
             {
                 Token = Token,
@@ -35,10 +51,13 @@ namespace BBotCore
             Commands = Discord.UseCommandsNext(new CommandsNextConfiguration
             {
                 CaseSensitive = false,
-                StringPrefixes = new String[] { "$" },
                 EnableDefaultHelp = true,
                 EnableDms = false,
                 EnableMentionPrefix = true,
+                PrefixResolver = async (message) => {
+                    var Prefix = Services.DatabaseHelper.Guilds.Get(message.Channel.GuildId).Prefix ?? "$";
+                    return message.GetStringPrefixLength(Prefix, StringComparison.OrdinalIgnoreCase);
+                }
             });
 
             Interactivity = Discord.UseInteractivity(new InteractivityConfiguration()
@@ -67,6 +86,5 @@ namespace BBotCore
             await Discord.ConnectAsync();
             await Task.Delay(-1);
         }
-
     }
 }
