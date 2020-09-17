@@ -28,15 +28,12 @@ namespace BBotCore
             SearchHelper Search = Services.SearchHelper;
             string Result = (await Search.AsyncSearchFor(Query, 1)).First();
 
-            DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
+            await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "🕵️ $scp",
-                // Description = $"Access authorized.",
-            };
-            Builder.AddField("Result", Result);
-
-            await ctx.RespondAsync(embed: Builder.Build());
+            }
+            .AddField("Result", Result));
         }
     }
 }

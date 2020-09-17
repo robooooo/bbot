@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Enums;
 
 namespace BBotCore
 {
@@ -14,41 +16,51 @@ namespace BBotCore
         [Aliases("changes", "version")]
         [Description("posts changelog information for BBot")]
         public async Task Changelog(CommandContext ctx,
-            [Description("version to view changes for, but can be omitted to view the latest versions")] string version
+            [Description("version to view changes for, but can be omitted to view all versions")] string version
         )
         {
-            DiscordEmbedBuilder Builder = new DiscordEmbedBuilder()
+            if (!Consts.VERSION_INFO.ContainsKey(version))
+            {
+                throw new ArgumentException($"Version number {version} does not exist.");
+            }
+
+            await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "🕒 $changelog",
-            };
-
-            if (!Consts.VERSION_INFO.ContainsKey(version))
-            {
-                throw new ArgumentException($"A version called {version} does not exist.");
+                Description = "Showing specified version."
             }
-
-            Builder.Description = "Showing specified version.";
-            Builder.AddField($"Version {version}", Consts.VERSION_INFO[version]);
-
-            await ctx.RespondAsync(embed: Builder.Build());
+            .AddField($"Version {version}", Consts.VERSION_INFO[version]));
         }
 
         [Command("changelog")]
         public async Task Changelog(CommandContext ctx)
         {
-            DiscordEmbedBuilder Builder = new DiscordEmbedBuilder()
+            IEnumerable<Page> Pages = Consts.VERSION_INFO.Select(pair =>
             {
-                Color = new DiscordColor(Consts.EMBED_COLOUR),
-                Title = "🕒 $changelog",
-                Description = "Showing latest 3 versions."
-            };
+                return new Page(embed: new DiscordEmbedBuilder()
+                {
+                    Color = new DiscordColor(Consts.EMBED_COLOUR),
+                    Title = "🕒 $changelog",
+                    Description = "Showing all versions."
 
-            foreach (var pair in Consts.VERSION_INFO.Take(3))
-                Builder.AddField($"Version {pair.Key}", pair.Value);
+                }
+                .AddField($"Version {pair.Key}", pair.Value));
+            });
 
-            await ctx.RespondAsync(embed: Builder.Build());
-
+            await ctx.Client.GetInteractivity().SendPaginatedMessageAsync(
+                c: ctx.Channel,
+                u: ctx.User,
+                pages: Pages,
+                behaviour: PaginationBehaviour.Ignore,
+                deletion: PaginationDeletion.DeleteEmojis,
+                emojis: new PaginationEmojis()
+                {
+                    SkipLeft = null,
+                    SkipRight = null,
+                    Stop = null,
+                }
+            );
         }
     }
 }

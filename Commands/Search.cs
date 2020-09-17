@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 
@@ -20,66 +22,51 @@ namespace BBotCore
         {
             // Snippet gets our search results stored in Search
             SearchHelper Search = Services.SearchHelper;
-            List<string> Results = await Search.AsyncSearchFor(query);
+            List<string> Results = await Search.AsyncSearchFor(query, 10);
 
             // Needed to tabulate search results
             string[] Titles = new string[]
             {
-                "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth",
+                "First", "Second", "Third", "Fourth",
+                "Fifth", "Sixth", "Seventh", "Eighth",
+                "Ninth", "Tenth", "Eleventh", "Twelfth"
             };
 
-            DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
+            const int PAGES = 3;
+            const int ENTRIES = 3;
+            IEnumerable<Page> Pages = Enumerable.Range(0, PAGES).Select(page =>
             {
-                Color = new DiscordColor(Consts.EMBED_COLOUR),
-                Title = "🔍 $search",
-                Description = $"Showing 4 search results",
-                Footer = new DiscordEmbedBuilder.EmbedFooter()
-                {
-                    Text = "React to this message to show all results."
-                }
-            };
-
-            for (int i = 0; i < 4; i++)
-                Builder.AddField($"{Titles[i]} Result", Results[i], inline: false);
-
-            // REFACTOR: Add react?
-            var EmbedMessage = await ctx.RespondAsync(embed: Builder.Build());
-            var UrlMesage = await ctx.RespondAsync($"{Results[0]}");
-            // Make it easier for users to react by adding our own reaction
-
-            // This is fine, since DM commands are turned off
-            var Permissions = ctx.Channel.PermissionsFor(ctx.Guild.CurrentMember);
-            if (Permissions.HasPermission(Permissions.AddReactions) || Permissions.HasPermission(Permissions.Administrator))
-                await EmbedMessage.CreateReactionAsync(DiscordEmoji.FromName(ctx.Client, ":mag:"));
-
-            // We want to wait a bit so that we don't trigger from our own reaction
-            await Task.Delay(1500);
-            var Interact = ctx.Client.GetInteractivity();
-            var Result = await Interact.WaitForReactionAsync(e => true, timeoutoverride: TimeSpan.FromSeconds(60));
-
-            if (!Result.TimedOut)
-            {
-                DiscordEmbedBuilder EditedBuilder = new DiscordEmbedBuilder
+                DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
                 {
                     Color = new DiscordColor(Consts.EMBED_COLOUR),
                     Title = "🔍 $search",
-                    Description = $"Showing all search results.",
-                    Footer = new DiscordEmbedBuilder.EmbedFooter()
-                    {
-                        Text = "All results have been shown."
-                    }
+                    Description = $"Showing {Titles[page].ToLower()} page of results.",
                 };
 
-                for (int i = 0; i < 10; i++)
-                    EditedBuilder.AddField($"{Titles[i]} Result", Results[i], inline: false);
+                for (int i = 0; i < ENTRIES; i++)
+                    Builder.AddField($"{Titles[page * ENTRIES + i]} Result", Results[page * ENTRIES + i], inline: false);
 
-                // We delete this because it looks better and will not spam the chat
-                await UrlMesage.DeleteAsync();
+                return new Page(embed: Builder);
+            });
 
-                await EmbedMessage.ModifyAsync(embed: EditedBuilder.Build());
-                if (ctx.Channel.PermissionsFor(ctx.Guild.CurrentMember).HasPermission(Permissions.ManageEmojis))
-                    await EmbedMessage.DeleteAllReactionsAsync();
-            }
+            var Interact = ctx.Client.GetInteractivity();
+            await ctx.RespondAsync($"{Results[0]}");
+            await Interact.SendPaginatedMessageAsync(
+                c: ctx.Channel,
+                u: ctx.User,
+                pages: Pages,
+                // Ignore extra scrolling as opposed to wrapping around
+                behaviour: PaginationBehaviour.Ignore,
+                deletion: PaginationDeletion.DeleteEmojis,
+                emojis: new PaginationEmojis()
+                {
+                    SkipLeft = null,
+                    SkipRight = null,
+                    Stop = null,
+                }
+            );
+
+            // Interact.SendPaginatedMessageAsync(ctx.Channel, null, new)
         }
     }
 }

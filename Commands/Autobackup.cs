@@ -31,15 +31,14 @@ namespace BBotCore
             // await Services.DatabaseHelper.SetAutobackupDestination(ctx.Channel.Id, destination.Id);
             Services.DatabaseHelper.Channels.Update(ctx.Channel.Id, dat => dat.AutobackupDest = destination.Id);
 
-            DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
+            await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "⤵️ $autobackup",
                 Description = $"Updated Configuration"
-            };
-            Builder.AddField(name: "Configuration", value: $"When there are nearly fifty pinned messages in this channel, they will all be backed up to **#{destination.Name}**.");
-            Builder.AddField(name: "Info", value: $"This feature can be disabled by typing only `$autobackup` with no arguments.");
-            await ctx.RespondAsync(embed: Builder.Build());
+            }
+            .AddField(name: "Configuration", value: $"When there are nearly fifty pinned messages in this channel, they will all be backed up to **#{destination.Name}**.")
+            .AddField(name: "Info", value: $"This feature can be disabled by typing only `$autobackup` with no arguments."));
         }
 
         [Command("autobackup")]
@@ -56,14 +55,13 @@ namespace BBotCore
             // await Services.DatabaseHelper.ClearAutobackupDestination(ctx.Channel.Id);
             Services.DatabaseHelper.Channels.Update(ctx.Channel.Id, dat => dat.AutobackupDest = null);
 
-            DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
+            await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "⤵️ $autobackup",
-                Description = $"Updated Configuration"
-            };
-            Builder.AddField(name: "Configuration", value: $"Pinned messages in this channel will not automatically be backed up.");
-            await ctx.RespondAsync(embed: Builder.Build());
+                Description = $"Updated Configuration",
+            }
+            .AddField(name: "Configuration", value: $"Pinned messages in this channel will not automatically be backed up."));
         }
     }
 

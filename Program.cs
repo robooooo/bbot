@@ -8,19 +8,19 @@ using Microsoft.Data.Sqlite;
 using System.Linq;
 
 // TODO:
-// [ ] SEO on bot listing pages
+// [!] SEO on bot listing pages
 // [+] Switch to new db backend
-// [ ] Async for litedb
+// [!] Async for litedb
 // [+] Set prefix handler
-// [ ] Set prefix command
-// [ ] Command framework for replies
+// [+] Set prefix command
+// [!] Command framework for replies
 // [ ] Command framework for missing arguments
 // [ ] Setup dialog
-// [ ] Pagination on search
-// [ ] Fix search expansion bug
-// [ ] Pagination on changelog
+// [+] Pagination on search
+// [+] Pagination on changelog
+// [+] Fix search expansion bug
 // [+] Change permission checks to use attributes
-// [ ] Rework permissions/structure in backup funcs
+// [!] Rework permissions/structure in backup funcs
 // [ ] Pin archive/backup to file functionality
 
 namespace BBotCore

@@ -16,28 +16,26 @@ namespace BBotCore
         public async Task About(CommandContext ctx
         )
         {
-            DiscordEmbedBuilder Builder = new DiscordEmbedBuilder()
+            string Links = "https://top.gg/bot/362666654452416524\n" +
+                "https://discord.bots.gg/bots/362666654452416524\n" +
+                "https://discordbotlist.com/bots/bbot\n" +
+                "https://bots.ondiscord.xyz/bots/362666654452416524";
+
+            await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Title = "📚 $about",
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Description = "Manage your pins and server with automatic message pinning and backing-up in stylish embeds.",
-                Footer = new DiscordEmbedBuilder.EmbedFooter() {
+                Footer = new DiscordEmbedBuilder.EmbedFooter()
+                {
                     Text = "If you're looking for command descriptions, try `$help`."
                 }
-            };
-
-            string Links = "https://top.gg/bot/362666654452416524\n" +
-                "https://discord.bots.gg/bots/362666654452416524\n" +
-                "https://discordbotlist.com/bots/bbot\n" + 
-                "https://bots.ondiscord.xyz/bots/362666654452416524";
-
-            Builder.AddField("Version", $"{Consts.VERSION_INFO.First().Key}");
-            Builder.AddField("Links", Links);
-            Builder.AddField("Github", "https://github.com/robooooo/bbot");
-            Builder.AddField("Invite", "https://discordapp.com/oauth2/authorize?client_id=362666654452416524&scope=bot&permissions=92224");
-            Builder.AddField("Support", "https://discord.com/invite/YAXQC2Q");
-
-            await ctx.RespondAsync(embed: Builder);
+            }
+            .AddField("Version", $"{Consts.VERSION_INFO.First().Key}")
+            .AddField("Links", Links)
+            .AddField("Github", "https://github.com/robooooo/bbot")
+            .AddField("Invite", "https://discordapp.com/oauth2/authorize?client_id=362666654452416524&scope=bot&permissions=92224")
+            .AddField("Support", "https://discord.com/invite/YAXQC2Q"));
         }
     }
 }

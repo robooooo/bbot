@@ -22,17 +22,15 @@ namespace BBotCore
 
             Services.DatabaseHelper.Guilds.Update(ctx.Guild.Id, dat => dat.Prefix = prefix);
 
-            DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
+            await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "🤖 $prefix",
                 Description = $"Updated Configuration"
-            };
-
-            Builder.AddField(name: "Configuration", value: $"The new prefix in this guild is now **{prefix}** for all channels.");
-            Builder.AddField(name: "Info", value: $"This change can be reverted by typing only `$prefix` with no arguments.");
-            Builder.AddField(name: "Info", value: $"If you forget the prefix here, you can use commands by mentioning bbot instead.");
-            await ctx.RespondAsync(embed: Builder);
+            }
+            .AddField(name: "Configuration", value: $"The new prefix in this guild is now **{prefix}** for all channels.")
+            .AddField(name: "Info", value: $"This change can be reverted by typing only `$prefix` with no arguments.")
+            .AddField(name: "Info", value: $"If you forget the prefix here, you can use commands by mentioning bbot instead."));
         }
 
         [Command("prefix")]
@@ -40,15 +38,13 @@ namespace BBotCore
         {
             Services.DatabaseHelper.Guilds.Update(ctx.Guild.Id, dat => dat.Prefix = "$");
 
-            DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
+            await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
                 Title = "🤖 $prefix",
                 Description = $"Updated Configuration"
-            };
-
-            Builder.AddField(name: "Configuration", value: $"The new prefix in this guild is **$**, which is the default.");
-            await ctx.RespondAsync(embed: Builder);
+            }
+            .AddField(name: "Configuration", value: $"The new prefix in this guild is **$**, which is the default."));
         }
     }
 }
