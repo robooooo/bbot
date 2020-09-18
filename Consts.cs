@@ -24,6 +24,11 @@ namespace BBotCore
         public static Dictionary<string, string> VERSION_INFO = new Dictionary<string, string>()
             {
                 {
+                    "4.3.6",
+
+                    "- Amended the `$search` function to respect discord's terms of service with respect to NSFW content."
+                },
+                {
                     "4.3.5",
 
                     "- Fixed bbot thinking it didn't recognise the `.gif` filetype in backups, even though it does.\n" +
@@ -37,13 +42,13 @@ namespace BBotCore
                     "- Minor internal tweaks involving bbot's internal usage of various APIs."
                 },
                 {
-                    "4.3.3",
+    "4.3.3",
 
                     "- Updated the `$backup` command to handle file formats unsupported by discord in a cleaner manner.\n" +
                     "- Thumbnail support for `.mp4` videos in the `$backup` command is not included with this update, but is on the radar."
                 },
                 {
-                    "4.3.2",
+    "4.3.2",
 
                     "- Added an `$about` command for bbot-related links.\n" +
                     "- We've been approved on several bot-listing websites!\n" +
@@ -51,7 +56,7 @@ namespace BBotCore
                     "- Added rotating status messages, including a guild count."
                 },
                 {
-                    "4.3.1",
+    "4.3.1",
 
                     "- Fixed a bug where backup-related commands would sporadically fail.\n" +
                     "- Fixed a related bug where icons in the backup command would stop working if users changed their avatars.\n" +
@@ -59,7 +64,7 @@ namespace BBotCore
                     "- Fixed an issue the version number in bbot's status would often be incorrect."
                 },
                 {
-                    "4.3.0",
+    "4.3.0",
 
                     " - Updated the internal framework that BBot uses, allowing for more features to be added.\n" +
                     " - Updated the `$help` command to list command's aliases." +
@@ -70,7 +75,7 @@ namespace BBotCore
                     " - Updated the wording in many commands to fix inconsistencies and bugs."
                 },
                 {
-                    "4.2.0",
+    "4.2.0",
 
                     " - **Added `$autopin` and `$autobackup` features!**\n" +
                     " - The `$autopin` command allows you to set a limit, if the number of pushpin reactions on a message in the current channel reaches this point, the message is pinned.\n" +
@@ -79,7 +84,7 @@ namespace BBotCore
                     " - Minor changes to spelling of some help information."
                 },
                 {
-                    "4.1.0",
+    "4.1.0",
 
                     " - **Major overhaul of BBot**\n" +
                     " - Plenty of under-the-hood optimisations and improvements.\n" +
@@ -95,37 +100,37 @@ namespace BBotCore
 
                 },
                 {
-                    "4.0.5",
+    "4.0.5",
 
                     "- It used to be the case that `$backup` would crash the bot. Now it isn't.\n" +
                     "- Isn't that just neat?"
                 },
                 {
-                    "4.0.4",
+    "4.0.4",
 
                     "- Added an `$SCP` command due to a user's request.\n" +
                     "- The command fetches an SCP or tale from the scp site."
                 },
                 {
-                    "4.0.3",
+    "4.0.3",
 
                     "- Trialing the `$search` command having inline results (saves space?)\n" +
                     "- `$backup` now links to the original post in the footer."
                 },
                 {
-                    "4.0.2",
+    "4.0.2",
 
                     "- (Hopefully) fixed an issue with the bot crashing and not being able to resume."
                 },
                 {
-                    "4.0.1",
+    "4.0.1",
 
                     "- Fixed a bug where `$search` results would contain spaces.\n" +
                     "- Fixed a bug where `$search` results would have malformatted links.\n" +
                     "- `$backup` results now feature a link to the post.\n"
                 },
                 {
-                    "4.0.0",
+    "4.0.0",
 
                     "**Fourth re-write of bbot!**\n" +
                     "**BBot is now hosted**, for a (hopefully) permanent uptime.\n" +
@@ -137,7 +142,7 @@ namespace BBotCore
                     "TODO: BBot will have a more customised help menu.\n"
                 },
                 {
-                    "3.0.0",
+    "3.0.0",
 
                     "Previous version of bbot."
                 },
