@@ -22,12 +22,12 @@ namespace BBotCore
                 throw new ArgumentException("The reaction threshold for this command cannot be zero.");
 
             // await Services.DatabaseHelper.SetAutopinLimit(ctx.Channel.Id, limit);
-            Services.DatabaseHelper.Channels.Update(ctx.Channel.Id, dat => dat.AutopinLimit = limit);
+            await Services.DatabaseHelper.Channels.Update(ctx.Channel.Id, dat => dat.AutopinLimit = limit);
 
             await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
-                Title = "📌 $autopin",
+                Title = "📌 autopin",
                 Description = $"Updated Configuration"
             }
             .AddField(name: "Configuration", value: $"Messages in this channel will be pinned when they reach **{limit}** pushpin reactions.")
@@ -39,12 +39,12 @@ namespace BBotCore
         public async Task Autopin(CommandContext ctx)
         {
             // await Services.DatabaseHelper.SetAutopinLimit(ctx.Channel.Id, 0);
-            Services.DatabaseHelper.Channels.Update(ctx.Channel.Id, dat => dat.AutopinLimit = 0);
+            await Services.DatabaseHelper.Channels.Update(ctx.Channel.Id, dat => dat.AutopinLimit = 0);
 
             await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
-                Title = "📌 $autopin",
+                Title = " $autopin",
                 Description = $"Updated Configuration"
             }
             .AddField(name: "Configuration", value: $"Messages in this channel will never be pinned by bbot."));

@@ -21,7 +21,7 @@ namespace BBotCore
             await src.SendMessageAsync(embed: new DiscordEmbedBuilder
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
-                Title = "💾 $backup",
+                Title = "💾 backup",
                 Description = $"Backing up {Pins.Count} pins to #{dst.Name}.",
             });
 
@@ -70,17 +70,18 @@ namespace BBotCore
                         "A file included in this message could not be displayed properly.",
                         $"You can view the original post by clicking on the author's name above, or by clicking [this]({pin.JumpLink}) link."
                     );
-
+                
                 await dst.SendMessageAsync(embed: Builder.Build());
-
                 await pin.UnpinAsync();
+                // Experimental 1/5 second delay: might fix performance degrading while backups are happening. 
+                await Task.Delay(200);
             }
 
             await src.SendMessageAsync(embed: new DiscordEmbedBuilder
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
-                Title = "💾 $backup",
-                Description = $"Backup finished successfully.",
+                Title = "💾 backup",
+                Description = "Backup finished successfully.",
             });
         }
 

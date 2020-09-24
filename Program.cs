@@ -20,7 +20,10 @@ using System.Linq;
 // [+] Pagination on changelog
 // [+] Fix search expansion bug
 // [+] Change permission checks to use attributes
-// [!] Rework permissions/structure in backup funcs
+// [!] Rework permissions/structure in backup funcs 
+// ^ is this even possible to do cleanly?
+// [+] Add announcements to $about
+// [+] Remove default prefix from commands
 // [ ] Pin archive/backup to file functionality
 
 namespace BBotCore
@@ -55,7 +58,7 @@ namespace BBotCore
                 EnableDms = false,
                 EnableMentionPrefix = true,
                 PrefixResolver = async (message) => {
-                    var Prefix = Services.DatabaseHelper.Guilds.Get(message.Channel.GuildId).Prefix ?? "$";
+                    var Prefix = (await Services.DatabaseHelper.Guilds.Get(message.Channel.GuildId)).Prefix ?? "$";
                     return message.GetStringPrefixLength(Prefix, StringComparison.OrdinalIgnoreCase);
                 }
             });

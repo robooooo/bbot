@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using LiteDB;
+using LiteDB.Async;
 
 namespace BBotCore
 {
@@ -18,21 +19,21 @@ namespace BBotCore
 
         public class DataHelper<T> where T: new()
         {
-            private LiteDB.ILiteCollection<T> Collection;
-            public DataHelper(LiteDB.ILiteCollection<T> col) => Collection = col;
-            public T Get(ulong id) => Collection.FindById(ToId(id)) ?? new T();
-            public bool Set(ulong id, T value) => Collection.Upsert(ToId(id), value);
+            private LiteCollectionAsync<T> Collection;
+            public DataHelper(LiteCollectionAsync<T> col) => Collection = col;
+            public async Task<T> Get(ulong id) => await Collection.FindByIdAsync(ToId(id)) ?? new T();
+            public async Task<bool> Set(ulong id, T value) => await Collection.UpsertAsync(ToId(id), value);
 
-            public bool Update(ulong id, Action<T> mapping) {
-                T data = Get(id) ?? new T();
+            public async Task<bool> Update(ulong id, Action<T> mapping) {
+                T data = await Get(id) ?? new T();
                 mapping(data);
-                return Set(id, data);
+                return await Set(id, data);
             }
         }
 
         public DatabaseHelper()
         {
-            var Database = new LiteDatabase(Environment.GetEnvironmentVariable("BBOT_LITEDB_PATH"));
+            var Database = new LiteDatabaseAsync(Environment.GetEnvironmentVariable("BBOT_LITEDB_PATH"));
             Channels = new DataHelper<Db.ChannelData>(Database.GetCollection<Db.ChannelData>("channels"));
             Guilds = new DataHelper<Db.GuildData>(Database.GetCollection<Db.GuildData>("guilds"));
         }

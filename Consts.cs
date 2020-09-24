@@ -8,7 +8,9 @@ namespace BBotCore
 
         public static int BEATS_BETWEEN_STATUSES = 15;
 
-        public static int AUTOBACKUP_THRESHOLD = 2;
+        public static int AUTOBACKUP_THRESHOLD = 45;
+
+        public static ulong ANNOUNCEMENTS_CHANNEL = 756608739930407124;
 
         // I was wanting to have these links to upvote pages as statuses.
         // However, since bots do not allow custom statuses, the text is not copyable.

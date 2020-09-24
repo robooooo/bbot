@@ -27,7 +27,7 @@ namespace BBotCore
             await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
-                Title = "🕒 $changelog",
+                Title = "🕒 changelog",
                 Description = "Showing specified version."
             }
             .AddField($"Version {version}", Consts.VERSION_INFO[version]));
@@ -41,7 +41,7 @@ namespace BBotCore
                 return new Page(embed: new DiscordEmbedBuilder()
                 {
                     Color = new DiscordColor(Consts.EMBED_COLOUR),
-                    Title = "🕒 $changelog",
+                    Title = "🕒 changelog",
                     Description = "Showing all versions."
 
                 }

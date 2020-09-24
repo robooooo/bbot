@@ -20,13 +20,13 @@ namespace BBotCore
             if (prefix.Length > 10)
                 throw new Exception("The new prefix exceeds the maximum of ten characters.");
 
-            Services.DatabaseHelper.Guilds.Update(ctx.Guild.Id, dat => dat.Prefix = prefix);
+            await Services.DatabaseHelper.Guilds.Update(ctx.Guild.Id, dat => dat.Prefix = prefix);
 
             await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
-                Title = "🤖 $prefix",
-                Description = $"Updated Configuration"
+                Title = "🤖 prefix",
+                Description = "Updated Configuration"
             }
             .AddField(name: "Configuration", value: $"The new prefix in this guild is now **{prefix}** for all channels.")
             .AddField(name: "Info", value: $"This change can be reverted by typing only `$prefix` with no arguments.")
@@ -36,13 +36,13 @@ namespace BBotCore
         [Command("prefix")]
         public async Task Prefix(CommandContext ctx)
         {
-            Services.DatabaseHelper.Guilds.Update(ctx.Guild.Id, dat => dat.Prefix = "$");
+            await Services.DatabaseHelper.Guilds.Update(ctx.Guild.Id, dat => dat.Prefix = "$");
 
             await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
-                Title = "🤖 $prefix",
-                Description = $"Updated Configuration"
+                Title = "🤖 prefix",
+                Description = "Updated Configuration"
             }
             .AddField(name: "Configuration", value: $"The new prefix in this guild is **$**, which is the default."));
         }

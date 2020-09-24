@@ -12,7 +12,7 @@
     <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.41.1.1369" />
     <PackageReference Include="Imgur.Api" Version="4.0.1" />
     <PackageReference Include="LiteDB" Version="5.0.9" />
-    <PackageReference Include="litedb.async" Version="0.0.2" />
+    <PackageReference Include="litedb.async" Version="0.0.3" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.5" />
   </ItemGroup>
 

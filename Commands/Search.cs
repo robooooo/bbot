@@ -39,7 +39,7 @@ namespace BBotCore
                 DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
                 {
                     Color = new DiscordColor(Consts.EMBED_COLOUR),
-                    Title = "🔍 $search",
+                    Title = "🔍 search",
                     Description = $"Showing {Titles[page].ToLower()} page of results.",
                 };
 

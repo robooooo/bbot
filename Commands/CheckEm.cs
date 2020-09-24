@@ -32,7 +32,7 @@ namespace BBotCore
             await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
-                Title = "🍀 $roll",
+                Title = "🍀 roll",
                 Description = $"Check em'"
             }
             .AddField(name: "Result", value: $"{Out}"));
