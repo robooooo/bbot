@@ -50,7 +50,10 @@ namespace BBotCore
             });
 
             var Interact = ctx.Client.GetInteractivity();
-            await ctx.RespondAsync($"{Results[0]}");
+            var First = Task.Run(async () => {
+                await Task.Delay(100);
+                await ctx.RespondAsync($"{Results[0]}");
+            });
             await Interact.SendPaginatedMessageAsync(
                 c: ctx.Channel,
                 u: ctx.User,
@@ -65,6 +68,7 @@ namespace BBotCore
                     Stop = null,
                 }
             );
+            await First;
 
             // Interact.SendPaginatedMessageAsync(ctx.Channel, null, new)
         }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using LiteDB;
 using LiteDB.Async;
+using LanguageExt;
 
 namespace BBotCore
 {

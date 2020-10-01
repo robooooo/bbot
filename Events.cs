@@ -88,7 +88,22 @@ namespace BBotCore
                     if (MaybeDestId is ulong destId)
                     {
                         DiscordChannel destination = e.Channel.Guild.GetChannel(destId);
-                        await Services.BackupHelper.DoBackup(e.Channel, destination);
+                        var BackupHelper = new BackupHelper(e.Channel, destination)
+                        {
+                            HeaderMessage = new DiscordEmbedBuilder
+                            {
+                                Color = new DiscordColor(Consts.EMBED_COLOUR),
+                                Title = "💾 autobackup",
+                                Description = $"Backing up {Pins.Count} pins to #{destination.Name}.",
+                            }.Build(),
+                            FooterMessage = new DiscordEmbedBuilder
+                            {
+                                Color = new DiscordColor(Consts.EMBED_COLOUR),
+                                Title = "💾 autobackup",
+                                Description = "Backup finished successfully.",
+                            }.Build()
+                        };
+                        await BackupHelper.DoBackup();
                     }
                 }
             }

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Specialized;
 using Google.Apis.Customsearch.v1;
 using Google.Apis.Services;
-using Imgur.API.Authentication.Impl;
+using Imgur.API.Authentication;
 using DSharpPlus.CommandsNext;
 
 namespace BBotCore

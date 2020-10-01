@@ -8,7 +8,7 @@ namespace BBotCore
 
         public static int BEATS_BETWEEN_STATUSES = 15;
 
-        public static int AUTOBACKUP_THRESHOLD = 45;
+        public static int AUTOBACKUP_THRESHOLD = 3;
 
         public static ulong ANNOUNCEMENTS_CHANNEL = 756608739930407124;
 
@@ -30,10 +30,18 @@ namespace BBotCore
                 {
                     "4.4.0",
 
-                    " - Changed bbot's internal database and related APIs to a more extensible format.\n" +
-                    " - Added the `prefix` command which, as the name implies, allows users to change bbot's prefix.\n" + 
-                    " - Changed the `search` command to use paginated results, reducing chat spam.\n" +
-                    " - Changed the `changelog` command to use paginated results, displaying older versions"
+                    "- Added the `prefix` command which allows mods to change bbot's prefix in their servers.\n" + 
+                    "- Added an announcements section to the `about` command for status updates and important info.\n" +
+                    "- Mitigated some performance concerns in in various places and commands.\n" +
+                    "- Changed the `search` command to use paginated results, reducing chat spam.\n" +
+                    "- Fixed a bug in the `search` command that caused certain checks to apply to all servers\n." +
+                    "- Completely rewrote all of the backup functionality, fixing a few bugs with embeds on the way\n" +
+                    "(Please get in touch with me if you find an issue with this!)\n" +
+                    "- Changed some commands to use more robust permission checks.\n" +
+                    "- Changed the `changelog` command to use paginated results, displaying older versions." +
+                    "- Tweaked the display format for a few commands to better align with new features.\n" +
+                    "- Changed bbot's internal database and related APIs to a more extensible format.\n" +
+                    "- Made huge underlying interal tweaks, with more to come, allowing for future updates to come faster."
                 },
                 {
                     "4.3.6",

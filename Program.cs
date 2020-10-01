@@ -9,22 +9,13 @@ using System.Linq;
 
 // TODO:
 // [!] SEO on bot listing pages
-// [+] Switch to new db backend
-// [!] Async for litedb
-// [+] Set prefix handler
-// [+] Set prefix command
-// [!] Command framework for replies
-// [ ] Command framework for missing arguments
+// [?] Command framework for replies
+// [?] Command framework for missing arguments
 // [ ] Setup dialog
-// [+] Pagination on search
-// [+] Pagination on changelog
-// [+] Fix search expansion bug
-// [+] Change permission checks to use attributes
-// [!] Rework permissions/structure in backup funcs 
+// [?] Rework permissions/structure in backup funcs 
 // ^ is this even possible to do cleanly?
-// [+] Add announcements to $about
-// [+] Remove default prefix from commands
 // [ ] Pin archive/backup to file functionality
+// [?] Rework search again
 
 namespace BBotCore
 {
@@ -45,7 +36,6 @@ namespace BBotCore
                 TokenType = TokenType.Bot,
                 UseInternalLogHandler = true,
                 LogLevel = LogLevel.Debug,
-                MessageCacheSize = 128,
                 // Caused issues with crashing & stalling 
                 // However, we'll try it for now
                 AutoReconnect = true,

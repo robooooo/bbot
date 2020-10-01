@@ -29,7 +29,7 @@ namespace BBotCore
                 Description = "Updated Configuration"
             }
             .AddField(name: "Configuration", value: $"The new prefix in this guild is now **{prefix}** for all channels.")
-            .AddField(name: "Info", value: $"This change can be reverted by typing only `$prefix` with no arguments.")
+            .AddField(name: "Info", value: $"This change can be reverted by typing only `{prefix}prefix` with no arguments.")
             .AddField(name: "Info", value: $"If you forget the prefix here, you can use commands by mentioning bbot instead."));
         }
 

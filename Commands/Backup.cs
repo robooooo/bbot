@@ -19,7 +19,7 @@ namespace BBotCore
         {
             // Important so that unpriveliged users cannnot backup to channel they don't have post permissions for
             // Also provides error handling for the case where the bot itself is unpriveliged
-            Permissions HerePerms = destination.PermissionsFor(ctx.Member);
+            Permissions HerePerms = ctx.Channel.PermissionsFor(ctx.Member);
             Permissions TherePerms = destination.PermissionsFor(ctx.Member);
             // We need to manually check for admin because it overrides these permissions
             // Apply permission checks only to non-admins
@@ -31,7 +31,22 @@ namespace BBotCore
                     throw new Exception("You do not have permission to manage pins in the current channel.");
             }
 
-            await Services.BackupHelper.DoBackup(ctx.Channel, destination);
+            var BackupHelper = new BackupHelper(ctx.Channel, destination)
+            {
+                HeaderMessage = new DiscordEmbedBuilder
+                {
+                    Color = new DiscordColor(Consts.EMBED_COLOUR),
+                    Title = "💾 backup",
+                    Description = $"Backing up {(await ctx.Channel.GetPinnedMessagesAsync()).Count} pins to #{destination.Name}.",
+                }.Build(),
+                FooterMessage = new DiscordEmbedBuilder
+                {
+                    Color = new DiscordColor(Consts.EMBED_COLOUR),
+                    Title = "💾 backup",
+                    Description = "Backup finished successfully.",
+                }.Build()
+            };
+            await BackupHelper.DoBackup();
         }
     }
 }
