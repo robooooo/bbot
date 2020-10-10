@@ -4,3 +4,4 @@ obj/
 *.code-workspace
 bbot.db
 */bbot.db
+bbot*.db
