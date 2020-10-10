@@ -16,9 +16,9 @@ namespace BBotCore
         )
         {
             // REFACTOR: Maybe clean this up?
+            int Value;
             string[] Quantifiers = new string[] { "dubs", "trips", "quads", "pents", "hexts", "septs", "octs" };
 
-            int Value;
             int Ind = Array.IndexOf(Quantifiers, roll);
             if (Ind == -1)
                 throw new Exception($"The parameter '{roll}' is not valid. Dubs, trips, quads, pents, hexts, septs and octs are the avaliable rolls.");
@@ -29,13 +29,14 @@ namespace BBotCore
             int Result = Services.RNG.Next(0, (int)Math.Pow(10, Value));
             string Out = Result.ToString().PadLeft(Value, '0');
 
-            await ctx.RespondAsync(embed: new DiscordEmbedBuilder()
+            DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
-                Title = "🍀 roll",
+                Title = "🍀 $roll",
                 Description = $"Check em'"
-            }
-            .AddField(name: "Result", value: $"{Out}"));
+            };
+            Builder.AddField(name: "Result", value: $"{Out}");
+            await ctx.RespondAsync(embed: Builder.Build());
         }
     }
 }

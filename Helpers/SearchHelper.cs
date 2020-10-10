@@ -39,4 +39,4 @@ namespace BBotCore
 
         private string GetSearchCX() => Environment.GetEnvironmentVariable("SEARCH_CX");
     }
-}   
+}
