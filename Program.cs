@@ -7,6 +7,16 @@ using DSharpPlus.Interactivity;
 using Microsoft.Data.Sqlite;
 using System.Linq;
 
+// TODO:
+// [!] SEO on bot listing pages
+// [?] Command framework for replies
+// [?] Command framework for missing arguments
+// [ ] Setup dialog
+// [?] Rework permissions/structure in backup funcs 
+// ^ is this even possible to do cleanly?
+// [ ] Pin archive/backup to file functionality
+// [?] Rework search again
+
 namespace BBotCore
 {
     public class Program
@@ -18,15 +28,14 @@ namespace BBotCore
         public static void Main(string[] args)
         {
             // Initialise with bot token
-            // string Token = Environment.GetEnvironmentVariable("DISCORD_BETA_TOKEN");
-            string Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
+            string Token = Environment.GetEnvironmentVariable("DISCORD_BETA_TOKEN");
+            // string Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
             Discord = new DiscordClient(new DiscordConfiguration
             {
                 Token = Token,
                 TokenType = TokenType.Bot,
                 UseInternalLogHandler = true,
                 LogLevel = LogLevel.Debug,
-                MessageCacheSize = 128,
                 // Caused issues with crashing & stalling 
                 // However, we'll try it for now
                 AutoReconnect = true,
@@ -35,10 +44,13 @@ namespace BBotCore
             Commands = Discord.UseCommandsNext(new CommandsNextConfiguration
             {
                 CaseSensitive = false,
-                StringPrefixes = new String[] { "$" },
                 EnableDefaultHelp = true,
                 EnableDms = false,
                 EnableMentionPrefix = true,
+                PrefixResolver = async (message) => {
+                    var Prefix = (await Services.DatabaseHelper.Guilds.Get(message.Channel.GuildId)).Prefix ?? "$";
+                    return message.GetStringPrefixLength(Prefix, StringComparison.OrdinalIgnoreCase);
+                }
             });
 
             Interactivity = Discord.UseInteractivity(new InteractivityConfiguration()
@@ -67,6 +79,5 @@ namespace BBotCore
             await Discord.ConnectAsync();
             await Task.Delay(-1);
         }
-
     }
 }
