@@ -36,7 +36,7 @@ namespace BBotCore
             Builder = new DiscordEmbedBuilder()
             {
                 Color = new DiscordColor(Consts.EMBED_COLOUR),
-                Title = "❓ $help",
+                Title = "❓ help",
                 Footer = new DiscordEmbedBuilder.EmbedFooter() {
                     Text = "Also try the about command for bbot-related links and announcements."
                 }

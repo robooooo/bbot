@@ -8,7 +8,7 @@ namespace BBotCore
 
         public static int BEATS_BETWEEN_STATUSES = 15;
 
-        public static int AUTOBACKUP_THRESHOLD = 3;
+        public static int AUTOBACKUP_THRESHOLD = 45;
 
         public static ulong ANNOUNCEMENTS_CHANNEL = 756608739930407124;
 
