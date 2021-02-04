@@ -22,7 +22,7 @@ namespace BBotCore
             {
                 Color = new DiscordColor(0xB00020),
                 Title = "❌ Error!",
-                Description = $"In `${e.Command.Name}`",
+                Description = $"In `{e.Command.Name}`",
             };
 
             Exception ex = e.Exception;

@@ -16,8 +16,8 @@ namespace BBotCore
         // However, since bots do not allow custom statuses, the text is not copyable.
         // That means there's not much point in having them.
         public static string[] STATUS_MESSAGES = new string[] {
-            "$changelog LATEST_VERSION",
-            "$about",
+            "changelog LATEST_VERSION",
+            "about",
             // "$help",
             "In GUILDS_JOINED guilds",
             // "top.gg/bot/362666654452416524/vote",
@@ -27,6 +27,19 @@ namespace BBotCore
 
         public static Dictionary<string, string> VERSION_INFO = new Dictionary<string, string>()
             {
+                {
+                    "4.4.2",
+
+                    "- Fixed a bug where backed-up pins would be in the wrong order.\n" +
+                    "- Fixed a bug where the backup function would display empty embeds.\n" +
+                    "- Tweaked the backup function to more intelligently get text from embeds.\n" +
+                    "- Tweaked the display format in the command error handler."
+                },
+                {
+                    "4.4.1",
+
+                    "- Fixed a bug where autobackup would trigger far too often."
+                },
                 {
                     "4.4.0",
 

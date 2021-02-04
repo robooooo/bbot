@@ -28,8 +28,8 @@ namespace BBotCore
         public static void Main(string[] args)
         {
             // Initialise with bot token
-            //string Token = Environment.GetEnvironmentVariable("DISCORD_BETA_TOKEN");
-            string Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
+            string Token = Environment.GetEnvironmentVariable("DISCORD_BETA_TOKEN");
+            // string Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
             Discord = new DiscordClient(new DiscordConfiguration
             {
                 Token = Token,

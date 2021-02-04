@@ -40,7 +40,7 @@ namespace BBotCore
                 await Source.SendMessageAsync(embed: HeaderMessage);
 
             // We want to reverse here so that the oldest pins are posted first => newest pin is final
-            foreach (var Pin in Pins)
+            foreach (var Pin in Pins.Reverse())
             {
                 DiscordEmbed Embed = await ProcessMessage(Imgur, Pin);
                 await Destination.SendMessageAsync(embed: Embed);
@@ -57,10 +57,6 @@ namespace BBotCore
 
         private async Task<DiscordEmbed> ProcessMessage(ImgurHelper im, DiscordMessage pin)
         {
-            var Images = GetImagesFromMessage(pin);
-            Option<string> MaybeUrl = Images.FirstOrDefault(opt => opt.IsSome);
-            bool ImproperDisplay = Images.Count > 1 || Images.Any(opt => opt.IsNone);
-
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {
                 Description = GetContentFromMessage(pin),
@@ -77,13 +73,20 @@ namespace BBotCore
                 },
             };
 
+            var Images = GetImagesFromMessage(pin);
+            Option<string> MaybeUrl = Images.FirstOrDefault(opt => opt.IsSome);
+            bool ImproperDisplay = false;
+            ImproperDisplay |= Images.Count > 1;
+            ImproperDisplay |= Images.Any(opt => opt.IsNone);
+            ImproperDisplay |= String.IsNullOrWhiteSpace(Builder.Description) && MaybeUrl.IsNone;
+
             MaybeUrl.IfSome(url => Builder.ImageUrl = url);
             if (ImproperDisplay)
                 Builder.AddField(
-                        "A file included in this message could not be displayed properly.",
+                        "A part of this message could not be displayed properly.",
                         $"You can view the original post by clicking on the author's name above, or by clicking [this]({pin.JumpLink}) link."
                 );
-            
+
             return Builder.Build();
         }
 
@@ -133,8 +136,12 @@ namespace BBotCore
                 if (!string.IsNullOrWhiteSpace(embed.Description))
                     return embed.Description;
 
+            foreach (var embed in msg.Embeds)
+                if (!string.IsNullOrWhiteSpace(embed.Footer?.Text))
+                    return embed.Description;
+
             return "";
         }
- 
+
     }
 }
