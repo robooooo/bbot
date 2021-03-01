@@ -16,7 +16,7 @@ namespace BBotCore
         private static int StatusIndex = 0;
         // Callback from errored command
         // Is used to display error messages
-        public static async Task CommandErrored(CommandErrorEventArgs e)
+        public static async Task CommandErrored(CommandsNextExtension ext, CommandErrorEventArgs e)
         {
             DiscordEmbedBuilder Builder = new DiscordEmbedBuilder
             {
@@ -40,9 +40,9 @@ namespace BBotCore
         }
 
         // Used to trigger the autopin feature.
-        public static async Task MessageReactionAdded(MessageReactionAddEventArgs e)
+        public static async Task MessageReactionAdded(DiscordClient client, MessageReactionAddEventArgs e)
         {
-            DiscordEmoji PinEmoji = DiscordEmoji.FromName((DiscordClient)e.Client, ":pushpin:");
+            DiscordEmoji PinEmoji = DiscordEmoji.FromName((DiscordClient)client, ":pushpin:");
             // Exit quickly if the reactions aren't relevant to the bot, saves time?
             if (!e.Emoji.Equals(PinEmoji))
                 return;
@@ -75,7 +75,7 @@ namespace BBotCore
         }
 
         // Used to trigger the autobackup feature.
-        public static async Task ChannelPinsUpdated(ChannelPinsUpdateEventArgs e)
+        public static async Task ChannelPinsUpdated(DiscordClient client, ChannelPinsUpdateEventArgs e)
         {
             var Pins = await e.Channel.GetPinnedMessagesAsync();
             try
@@ -123,21 +123,21 @@ namespace BBotCore
         // Using heartbeats as a timer to trigger status changes (hacky!)
         // Heartbeats are sent at around a 40-second interval
         // So 15 heartbeats are around 10 minutes
-        public static async Task HeartbeatTimer(HeartbeatEventArgs e)
+        public static async Task HeartbeatTimer(DiscordClient client, HeartbeatEventArgs e)
         {
             Heartbeats = (Heartbeats + 1) % (Consts.BEATS_BETWEEN_STATUSES);
             if (Heartbeats == 0)
             {
                 // This runs synchronously, so let's only do it so often
-                int guilds = e.Client.Guilds.Count();
+                int guilds = client.Guilds.Count();
                 if (guilds > 0)
-                    Services.GuildsHelper.UpdateGuildsAsync(e.Client.CurrentUser.Id, guilds);
+                    Services.GuildsHelper.UpdateGuildsAsync(client.CurrentUser.Id, guilds);
 
                 StatusIndex = (StatusIndex + 1) % Consts.STATUS_MESSAGES.Length;
                 string newStatus = Consts.STATUS_MESSAGES[StatusIndex]
                     .Replace("LATEST_VERSION", $"{Consts.VERSION_INFO.First().Key}")
                     .Replace("GUILDS_JOINED", $"{guilds}");
-                await e.Client.UpdateStatusAsync(new DiscordActivity(newStatus, ActivityType.Playing));
+                await client.UpdateStatusAsync(new DiscordActivity(newStatus, ActivityType.Playing));
             }
         }
     }

@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.Interactivity;
 using Microsoft.Data.Sqlite;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 // TODO:
 // [!] SEO on bot listing pages
@@ -34,20 +36,20 @@ namespace BBotCore
             {
                 Token = Token,
                 TokenType = TokenType.Bot,
-                UseInternalLogHandler = true,
-                LogLevel = LogLevel.Debug,
+                MinimumLogLevel = LogLevel.Debug,
                 // Caused issues with crashing & stalling 
                 // However, we'll try it for now
                 AutoReconnect = true,
             });
-            
+
             Commands = Discord.UseCommandsNext(new CommandsNextConfiguration
             {
                 CaseSensitive = false,
                 EnableDefaultHelp = true,
                 EnableDms = false,
                 EnableMentionPrefix = true,
-                PrefixResolver = async (message) => {
+                PrefixResolver = async (message) =>
+                {
                     var Prefix = (await Services.DatabaseHelper.Guilds.Get(message.Channel.GuildId)).Prefix ?? "$";
                     return message.GetStringPrefixLength(Prefix, StringComparison.OrdinalIgnoreCase);
                 }
@@ -58,7 +60,7 @@ namespace BBotCore
                 Timeout = TimeSpan.FromMinutes(1),
             });
 
-            Discord.Ready += async (e) =>
+            Discord.Ready += async (_, e) =>
             {
                 string LatestVersion = Consts.VERSION_INFO.First().Key;
                 await Discord.UpdateStatusAsync(new DiscordActivity($"$changelog {LatestVersion}", ActivityType.Playing));
