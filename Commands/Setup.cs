@@ -129,8 +129,6 @@ namespace BBotCore
                         }
                     }
 
-
-
                 }
                 return true;
             }
