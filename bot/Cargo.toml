@@ -1,0 +1,27 @@
+[package]
+name = "bot"
+version = "0.1.0"
+authors = ["atune <atune313@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+serde = "1.0.125"
+unqlite = "1.5.0"
+anyhow = "1.0.40"
+toml = "0.5.8"
+serde_derive = "1.0.125"
+futures = "0.3.14"
+
+[dependencies.serenity]
+features = ["unstable_discord_api"]
+version = "0.10.5"
+
+[dependencies.tokio]
+version = "1.5.0"
+features = ["full"]
+
+[dependencies.command_derive]
+path = "../command_derive"
+
+[dependencies.framework]
+path = "../framework"
