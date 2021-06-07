@@ -7,6 +7,8 @@ pub struct Tokens {
     pub search_cx: String,
     #[serde(rename = "search-key")]
     pub search_key: String,
+    #[serde(rename = "app-id")]
+    pub app_id: u64,
 }
 
 #[derive(Serialize, Deserialize)]

@@ -19,8 +19,7 @@ async fn main() -> anyhow::Result<()> {
 
     let mut client = Client::builder(&config.tokens.discord)
         .event_handler(Handler)
-        // TODO: Move into config
-        .application_id(724806362898366481u64)
+        .application_id(config.tokens.app_id)
         .framework(framework)
         .await?;
     client.start().await.map_err(Into::into)
