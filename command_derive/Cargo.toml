@@ -14,3 +14,5 @@ quote = "1.0.9"
 serenity = "0.10.7"
 syn = "1.0.72"
 
+[dependencies.framework]
+path = "../framework"
