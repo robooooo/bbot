@@ -1,0 +1,18 @@
+- [ ] Framework
+  - [ ] Finish `command_derive`
+  - [ ] Implement `CommandContext`
+  - [ ] Implement a registration framework
+    - [ ] Registration function
+    - [ ] Support for temporary commands
+  - [ ] Help command glue
+- [ ] Commands
+  - [ ] `about`
+  - [ ] `autobackup`
+  - [ ] `autopin`
+  - [ ] `backup`
+  - [ ] `changelog`
+  - [ ] `search`
+  - [ ] `setup`
+  - [ ] `help`
+- [ ] Refactoring
+  - [ ] Change `config.toml` layout

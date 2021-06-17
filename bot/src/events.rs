@@ -1,4 +1,5 @@
-use framework::{Arg, Command, Kind};
+use command_derive::command;
+use framework::{Arg, Command, CommandContext, Kind};
 use serenity::{
     async_trait,
     model::{
@@ -7,7 +8,6 @@ use serenity::{
     },
     prelude::*,
 };
-use std::future::Future;
 
 pub struct Handler;
 
@@ -70,4 +70,9 @@ impl EventHandler for Handler {
                 .unwrap();
         }
     }
+}
+
+#[command]
+fn a_command(ctx: CommandContext, arg: i32) -> anyhow::Result<()> {
+    Ok(())
 }

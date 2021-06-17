@@ -1,6 +1,8 @@
+#![feature(proc_macro_diagnostic)]
+
 use framework::CommandContext;
-use proc_macro::TokenStream;
-use proc_macro2::TokenStream as TokenStream2;
+use proc_macro::{TokenStream};
+use proc_macro2::{TokenStream as TokenStream2, Span as Span2};
 use quote::{quote, quote_spanned};
 use serenity::model::interactions::Interaction;
 use std::any::{Any, TypeId};
@@ -14,32 +16,47 @@ pub fn command(_attr: TokenStream, input: TokenStream) -> TokenStream {
     let input = syn::parse_macro_input!(input as syn::ItemFn);
     let mut types = input.sig.inputs.iter();
 
+    // Take the return type and assert that it's a Result
+    if input.sig.output.type_id() != TypeId::of::<anyhow::Result<()>>() {
+        quote_spanned! {input.sig.output.span()=> compile_error!("Expected first type to be `anyhow::Result<()>`")};
+        // Diagnostic::new(Level::Error, "mismatched types")
+        //     .span_error(input.sig.span(), "expected `anyhow::Result<()>`")
+        //     .emit();
+    }
     // Take the first argument and assert that it's a CommandContext
     let first = types.next();
     if !matches!(first, Some(arg) if arg.type_id() == TypeId::of::<CommandContext>()) {
-        quote_spanned! {input.sig.span()=> compile_error!("Expected first type to be CommandContext")};
+        quote_spanned! {input.sig.span()=> compile_error!("Expected first type to be `CommandContext`")};
     }
 
     // Map each type to code that parses it from the interactionn
     let types: Result<Vec<_>, _> = types.map(transform).collect();
     let types = match types {
         Ok(ty) => ty,
-        Err(why) => {
-            quote_spanned! {input.sig.span()=> compile_error!(why)};
-            unreachable!()
+        Err(span) => {
+            return syn::Error::new(span, "unsupported type").to_compile_error().into();
         }
     };
+
+    // let inter: Interaction;
+    // let it_data = inter.data;
+    // let it_data = it_data.ok_or("freakin error handling".into())?;
+    // let it_data = it_data.options.iter();
 
     let vis = &input.vis;
     let ident = &input.sig.ident;
     let res = quote! {
-        #vis fn #ident (inter: Interaction) -> anyhow::Result<()> {
+        use anyhow::anyhow;
+
+        #vis fn #ident (inter: Interaction) -> ::anyhow::Result<()> {
             let it_data = inter.data;
-            let it_data = data.ok_or("freakin error handling")?;
-            let mut it_data = it_data.iter();
+            let it_data = it_data.ok_or(anyhow!("top-level command returned no data"))?;
+            let mut it_data = it_data.options.iter();
+
+            let context = framework::CommandContext{};
 
             #input
-            #ident (#(#types);*)
+            #ident (context , #(#types);*)
         }
     };
     res.into()
@@ -52,12 +69,12 @@ pub fn command(_attr: TokenStream, input: TokenStream) -> TokenStream {
 // };
 
 /// Transform each type into some code that can parse into the given type (with error handling)
-fn transform(arg: &FnArg) -> Result<TokenStream2, &str> {
+fn transform(arg: &FnArg) -> Result<TokenStream2, Span2> {
     let id = arg.type_id();
     let variant = if id == TypeId::of::<i32>() {
         quote! {}
     } else {
-        return Err("Type unsupported by discord interactions");
+        return Err(arg.span());
     };
     let res = quote! {{
         match it_data.next() {

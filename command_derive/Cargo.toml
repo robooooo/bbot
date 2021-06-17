@@ -9,10 +9,13 @@ proc-macro = true
 
 [dependencies]
 anyhow = "1.0.40"
-proc-macro2 = "1.0.27"
 quote = "1.0.9"
 serenity = "0.10.7"
 syn = "1.0.72"
+
+[dependencies.proc-macro2]
+version = "1.0.27"
+# features = ["diagnostics"]
 
 [dependencies.framework]
 path = "../framework"

@@ -17,7 +17,7 @@ async fn main() -> anyhow::Result<()> {
 
     let framework = StandardFramework::new();
 
-    let mut client = Client::builder(&config.tokens.discord)
+    let mut client = Client::builder(dbg!(&config.tokens.discord))
         .event_handler(Handler)
         .application_id(config.tokens.app_id)
         .framework(framework)
