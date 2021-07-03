@@ -11,6 +11,7 @@ anyhow = "1.0.40"
 toml = "0.5.8"
 serde_derive = "1.0.125"
 futures = "0.3.14"
+inventory = "0.1.10"
 
 [dependencies.serenity]
 default-features = false

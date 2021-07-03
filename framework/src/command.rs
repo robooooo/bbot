@@ -1,6 +1,9 @@
 use crate::Arg;
 use serenity::model::interactions::Interaction;
 
+// Register a central collection of commands, via the inventory crate
+inventory::collect!(Command);
+
 #[derive(Clone)]
 pub struct Command {
     pub name: &'static str,

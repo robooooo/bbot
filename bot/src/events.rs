@@ -1,5 +1,5 @@
-use command_derive::command;
-use framework::{Arg, Command, CommandContext, Kind};
+
+use framework::{Arg, Command, Kind};
 use serenity::{
     async_trait,
     model::{
@@ -52,11 +52,11 @@ impl EventHandler for Handler {
         let testing = GuildId(517848417049772033u64);
         // Discord requires us to register our slash commands on startup.
         // Let's do that here.
-        for command in commands {
+        for command in inventory::iter::<Command> {
             testing
                 .create_application_command(&ctx.http, |f| {
                     f.name(command.name).description(command.desc);
-                    for arg in command.args {
+                    for arg in &command.args {
                         f.create_option(|f| {
                             f.name(arg.name)
                                 .description(arg.desc)
@@ -70,9 +70,4 @@ impl EventHandler for Handler {
                 .unwrap();
         }
     }
-}
-
-#[command]
-fn a_command(ctx: CommandContext, arg: i32) -> anyhow::Result<()> {
-    Ok(())
 }

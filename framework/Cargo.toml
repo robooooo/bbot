@@ -8,4 +8,5 @@ edition = "2018"
 
 [dependencies]
 anyhow = "1.0.40"
+inventory = "0.1.10"
 serenity = "0.10.7"

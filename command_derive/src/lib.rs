@@ -4,7 +4,6 @@ use framework::CommandContext;
 use proc_macro::{TokenStream};
 use proc_macro2::{TokenStream as TokenStream2, Span as Span2};
 use quote::{quote, quote_spanned};
-use serenity::model::interactions::Interaction;
 use std::any::{Any, TypeId};
 use syn::{spanned::Spanned, FnArg};
 
