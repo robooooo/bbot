@@ -1,11 +1,7 @@
-
-use framework::{Arg, Command, Kind};
+use framework::Command;
 use serenity::{
     async_trait,
-    model::{
-        interactions::{Interaction, InteractionResponseType},
-        prelude::*,
-    },
+    model::{interactions::Interaction, prelude::*},
     prelude::*,
 };
 
@@ -13,41 +9,31 @@ pub struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler {
-    async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
-        dbg!(&interaction);
-        let _ = interaction
-            .create_interaction_response(&ctx.http, |resp| {
-                resp.kind(InteractionResponseType::ChannelMessageWithSource)
-                    .interaction_response_data(|m| m.content("Ping!"))
-            })
-            .await;
+    async fn interaction_create(&self, _: Context, interaction: Interaction) {
+        let name = match interaction.data {
+            Some(ref val) => &val.name,
+            None => return,
+        };
+
+        // This might be a performance concern in the future? Should be fine for now.
+        for command in inventory::iter::<Command> {
+            if command.name == name {
+                // TODO: E.H.
+                (command.payload)(interaction).unwrap();
+                return;
+            }
+        }
+        // TODO: This should probably be moved to some utilities on CommandContext.
+        // let _ = interaction
+        //     .create_interaction_response(&ctx.http, |resp| {
+        //         resp.kind(InteractionResponseType::ChannelMessageWithSource)
+        //             .interaction_response_data(|m| m.content("Ping!"))
+        //     })
+        //     .await;
     }
 
     async fn ready(&self, ctx: Context, _: Ready) {
         println!("Connected!");
-
-        // let commands: Vec<Command> = Vec::new();
-        let commands: Vec<Command> = vec![Command {
-            payload: Box::new(|interaction: &mut Interaction| {
-                println!("{:#?}", interaction);
-            }),
-            name: "pingc",
-            desc: "Sends a ping! To a channel!",
-            args: vec![
-                Arg {
-                    name: "channel",
-                    desc: "Put it here!",
-                    required: true,
-                    kind: Kind::Channel,
-                },
-                Arg {
-                    name: "integer",
-                    desc: "Ping with this!",
-                    required: false,
-                    kind: Kind::Integer,
-                },
-            ],
-        }];
 
         let testing = GuildId(517848417049772033u64);
         // Discord requires us to register our slash commands on startup.

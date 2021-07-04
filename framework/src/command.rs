@@ -9,5 +9,5 @@ pub struct Command {
     pub name: &'static str,
     pub desc: &'static str,
     pub args: Vec<Arg>,
-    pub payload: Box<fn(&mut Interaction)>,
+    pub payload: fn(Interaction) -> anyhow::Result<()>,
 }
