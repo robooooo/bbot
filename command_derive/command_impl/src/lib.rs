@@ -31,7 +31,7 @@ pub fn command(_attr: TokenStream, input: TokenStream) -> TokenStream {
         .map(|_| {
             // Quote:
             quote! {
-                ::command_derive::ParseArg::parse_arg(&inter)
+                ::command_derive::ParseArg::parse_arg(&inter)?
             }
         })
         .collect();
