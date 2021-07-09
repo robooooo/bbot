@@ -5,10 +5,11 @@
     - [+] Registration function
     - [ ] Support for temporary commands
   - [ ] Implement an argument framework
-    - [ ] Commit to proper error handling
-    - [ ] Redo parsing trait
-      - [ ] Work on internal resolved options
-      - [ ] Have `command_derive` manage iterating through these
+    - [!] Ensure and test correctness for all types
+    - [+] Commit to proper error handling
+    - [+] Redo parsing trait
+      - [+] Work on internal resolved options
+      - [+] Have `command_derive` manage iterating through these
   - [ ] Help command glue
 - [ ] Commands
   - [ ] `about`

@@ -11,30 +11,32 @@ pub fn command(_attr: TokenStream, input: TokenStream) -> TokenStream {
     let input = syn::parse_macro_input!(input as syn::ItemFn);
     let mut types = input.sig.inputs.iter();
 
-    // // Take the return type and assert that it's a Result
-    // if input.sig.output.type_id() != TypeId::of::<anyhow::Result<()>>() {
-    //     quote_spanned! {input.sig.output.span()=> compile_error!("expected first type to be `anyhow::Result<()>`")};
-    //     // Diagnostic::new(Level::Error, "mismatched types")
-    //     //     .span_error(input.sig.span(), "expected `anyhow::Result<()>`")
-    //     //     .emit();
-    // }
-    // // Take the first argument and assert that it's a CommandContext
+    // Ignore the first type; which we will assume is a CommandContext
+    // TODO: In future, we may want to assert this.
     let _ = types.next();
-    // if !matches!(first, Some(arg) if arg.type_id() == TypeId::of::<CommandContext>()) {
-    //     quote_spanned! {input.sig.span()=> compile_error!("expected first type to be `CommandContext`")};
-    // }
 
     // Repeatedly call `ParseArg::parse_arg` as many times as we have arguments.
     // Later, this will be expanded in argument-position in our macro.
     let types: Vec<_> = types
         .into_iter()
         .map(|_| {
-            // Quote:
-            quote! {
-                ::command_derive::ParseArg::parse_arg(&inter)?
-            }
+            // Note: parse_arg has overloaded return type, so we don't care about the argument type
+            quote! {{
+                let next = values.next().ok_or(::anyhow::anyhow!("Not enough arguments provided to interaction"))?;
+                let next = next.resolved.ok_or(::anyhow::anyhow!("Object could not be resolved, perhaps it was malformed?"))?;
+
+                ::command_derive::ParseArg::parse_arg(next)?
+            }}
         })
         .collect();
+
+    // use anyhow::anyhow;
+    // let inter: Interaction = panic!();
+    // let values = inter
+    //     .data
+    //     .ok_or(anyhow!("Interaction cannot hold data"))
+    //     .unwrap();
+    // let b = values.options.into_iter().next().unwrap();
 
     let vis = &input.vis;
     let ident = &input.sig.ident;
@@ -45,7 +47,11 @@ pub fn command(_attr: TokenStream, input: TokenStream) -> TokenStream {
             // let mut it_data = it_data.options.iter();
 
             let context = ::framework::CommandContext{};
-            
+
+            // Find iterator of resolved interaction argument values
+            let values = inter.data.ok_or(::anyhow::anyhow!("Internal interaction cannot hold data"))?;
+            let mut values = values.options.into_iter();
+
             // Define and call inner function with same name as outer (i.e. #ident)
             #input
             return #ident (context , #(#types),*);
@@ -53,4 +59,3 @@ pub fn command(_attr: TokenStream, input: TokenStream) -> TokenStream {
     };
     res.into()
 }
-
