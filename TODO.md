@@ -1,15 +1,16 @@
 - [ ] Framework
   - [+] Finish `command_derive`
   - [ ] Implement `CommandContext`
+    - [+] Include command type 
+    - [+] Include inner context type 
+    - [ ] Include channel, message and user data
+  - [ ] Have reply, etc. functions 
   - [ ] Implement a registration framework
     - [+] Registration function
     - [ ] Support for temporary commands
   - [ ] Implement an argument framework
     - [!] Ensure and test correctness for all types
     - [+] Commit to proper error handling
-    - [+] Redo parsing trait
-      - [+] Work on internal resolved options
-      - [+] Have `command_derive` manage iterating through these
   - [ ] Help command glue
 - [ ] Commands
   - [ ] `about`

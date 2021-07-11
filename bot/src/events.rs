@@ -1,4 +1,4 @@
-use framework::Command;
+use framework::{Command, CommandContext};
 use serenity::{
     async_trait,
     model::{interactions::Interaction, prelude::*},
@@ -9,7 +9,7 @@ pub struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler {
-    async fn interaction_create(&self, _: Context, interaction: Interaction) {
+    async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         let name = match interaction.data {
             Some(ref val) => &val.name,
             None => return,
@@ -18,8 +18,12 @@ impl EventHandler for Handler {
         // This might be a performance concern in the future? Should be fine for now.
         for command in inventory::iter::<Command> {
             if command.name == name {
+                let context = CommandContext {
+                    client_context: ctx,
+                    command: command.clone(),
+                };
                 // TODO: E.H.
-                (command.payload)(interaction).unwrap();
+                (command.payload)(context, interaction).unwrap();
                 return;
             }
         }
@@ -41,7 +45,7 @@ impl EventHandler for Handler {
         for command in inventory::iter::<Command> {
             testing
                 .create_application_command(&ctx.http, |f| {
-                    f.name(command.name).description(command.desc);
+                    f.name(dbg!(command.name)).description(command.desc);
                     for arg in &command.args {
                         f.create_option(|f| {
                             f.name(arg.name)

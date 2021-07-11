@@ -41,12 +41,10 @@ pub fn command(_attr: TokenStream, input: TokenStream) -> TokenStream {
     let vis = &input.vis;
     let ident = &input.sig.ident;
     let res = quote! {
-        #vis fn #ident (inter: Interaction) -> ::anyhow::Result<()> {
+        #vis fn #ident (ctx: ::framework::CommandContext, inter: ::serenity::model::interactions::Interaction) -> ::anyhow::Result<()> {
             // let it_data = inter.data;
             // let it_data = it_data.ok_or(::anyhow::anyhow!("top-level command returned no data"))?;
             // let mut it_data = it_data.options.iter();
-
-            let context = ::framework::CommandContext{};
 
             // Find iterator of resolved interaction argument values
             let values = inter.data.ok_or(::anyhow::anyhow!("Internal interaction cannot hold data"))?;
@@ -54,7 +52,7 @@ pub fn command(_attr: TokenStream, input: TokenStream) -> TokenStream {
 
             // Define and call inner function with same name as outer (i.e. #ident)
             #input
-            return #ident (context , #(#types),*);
+            return #ident (ctx , #(#types),*);
         }
     };
     res.into()
